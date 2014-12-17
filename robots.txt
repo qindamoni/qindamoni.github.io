@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://qindamoni.github.io/sitemap.xml 
+Sitemap: http://qindamoni.com/sitemap.xml 
