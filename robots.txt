@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://qindamoni.github.io/sitemap.xml 

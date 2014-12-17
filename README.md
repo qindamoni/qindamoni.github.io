@@ -1,4 +1,0 @@
-qindamoni.github.io
-===================
-
-blog
