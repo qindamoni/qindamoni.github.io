@@ -9,9 +9,7 @@
   <meta name="author" content="Qindamoni">
 
   
-  <meta name="description" content="类型属性 和 对象属性 类型属性 做为Object类型的对象，js解释器内部提供了许多方法和属性。
-通过 obj.xxx = xxx 的形式赋值的，也只能通过 obj.xxx 的形式使用。
-这里的obj可以是Object,Function,Array,Date,RegExp,Boolean, &hellip;">
+  <meta name="description" content="Object 类型属性 Object.create Object.defineProperties Object.defineProperty Object.freeze Object.getOwnPropertyDescriptor Object.getOwnPropertyNames &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -89,240 +87,46 @@
   </header>
 
 
-  <div class="entry-content"><h3>类型属性 和 对象属性</h3>
+  <div class="entry-content"><h3>Object</h3>
 
 <h4>类型属性</h4>
 
-<ul>
-<li>做为Object类型的对象，js解释器内部提供了许多方法和属性。</li>
-<li>通过 obj.xxx = xxx 的形式赋值的，也只能通过 obj.xxx 的形式使用。</li>
-<li>这里的obj可以是Object,Function,Array,Date,RegExp,Boolean,String,Number中的任意一个</li>
-</ul>
+<h5>Object.create</h5>
 
+<h5>Object.defineProperties</h5>
 
-<h4>对象属性</h4>
+<h5>Object.defineProperty</h5>
 
-<ul>
-<li>做为Function类型的对象，所有通过<code>new 该对象</code>获得的对象都自动获得该对象的prototype属性中方法和属性。</li>
-<li>类似 xxx = new obj() 获得的xxx对象，可以直接通过xxx.a的形式调用obj.prototype.a</li>
-<li>这里的obj可以是Object,Function,Array,Date,RegExp,Boolean,String,Number中的任意一个</li>
-<li>也可以是自定义的Function类型的对象</li>
-</ul>
+<h5>Object.freeze</h5>
 
+<h5>Object.getOwnPropertyDescriptor</h5>
 
-<h3>Object</h3>
+<h5>Object.getOwnPropertyNames</h5>
 
-<p>类型属性</p>
+<h5>Object.getPrototypeOf</h5>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Object.prototype;                   // 即 对象属性和对象方法</span></code></pre></td></tr></table></div></figure>
+<h5>Object.is</h5>
 
+<h5>Object.isExtensible</h5>
 
-<p>类型方法</p>
+<h5>Object.isFrozen</h5>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Object.create();
-</span><span class='line'>Object.defineProperty();
-</span><span class='line'>Object.defineProperties();
-</span><span class='line'>Object.getOwnPropertyDescriptor();
-</span><span class='line'>Object.getOwnPropertyNames();
-</span><span class='line'>Object.getPrototypeOf();
-</span><span class='line'>Object.is();
-</span><span class='line'>Object.isExtensible();
-</span><span class='line'>Object.keys();
-</span><span class='line'>Object.setPrototypeOf();</span></code></pre></td></tr></table></div></figure>
+<h5>Object.isSealed</h5>
 
+<h5>Object.keys</h5>
 
-<p>对象属性</p>
+<h5>Object.preventExtensions</h5>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = new Object();
-</span><span class='line'>
-</span><span class='line'>obj.constructor;</span></code></pre></td></tr></table></div></figure>
+<h5>Object.prototype</h5>
 
-
-<p>对象方法</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = new Object();
-</span><span class='line'>
-</span><span class='line'>obj.__defineGetter__();
-</span><span class='line'>obj.__defineSetter__();
-</span><span class='line'>obj.__lookupGetter__();
-</span><span class='line'>obj.__lookupSetter__();
-</span><span class='line'>obj.hasOwnProperty();
-</span><span class='line'>obj.isPrototypeOf();
-</span><span class='line'>obj.propertyIsEnumerable();
-</span><span class='line'>obj.toLocaleString();
-</span><span class='line'>obj.toString();
-</span><span class='line'>obj.valueOf();</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Function</h3>
-
-<p>内部实现可以理解为</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Function = new Object();
-</span><span class='line'>
-</span><span class='line'>Function.prototype.arguments = ....;
-</span><span class='line'>Function.prototype.length = ....;
-</span><span class='line'>Function.prototype.toString = function(){....}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>类型属性</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Function.prototype;         // 即 对象属性 和 对象方法</span></code></pre></td></tr></table></div></figure>
-
-
-<p>类型方法</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>木有</span></code></pre></td></tr></table></div></figure>
-
-
-<p>对象属性</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var func = new Function();
-</span><span class='line'>
-</span><span class='line'>// 从自身的prototype获得，js解释器内部实现的
-</span><span class='line'>func.arguments;
-</span><span class='line'>func.length;
-</span><span class='line'>
-</span><span class='line'>// 从Object.prototype获得所有属性，后面的所有类型是同理，不再写出来了
-</span><span class='line'>func.constructor;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>对象方法</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var func = new Function();
-</span><span class='line'>
-</span><span class='line'>// 从自身的prototype获得
-</span><span class='line'>func.apply();
-</span><span class='line'>func.bind();
-</span><span class='line'>func.call();
-</span><span class='line'>func.toString();                    // 重写了Object.prototype中的toString()方法
-</span><span class='line'>
-</span><span class='line'>// 从Object.prototype获得方法
-</span><span class='line'>func.__defineGetter__();
-</span><span class='line'>func.__defineSetter__();
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Array</h3>
-
-<p>内部实现可以理解为</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var object  = new Object();
-</span><span class='line'>
-</span><span class='line'>var func    = new Function();
-</span><span class='line'>
-</span><span class='line'>Array = merge(object,func);
-</span><span class='line'>Array.isArray = function(){...}
-</span><span class='line'>
-</span><span class='line'>Array.prototype.xxx = ...;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>类型属性</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Array.prototype;    // 即 对象属性 和 对象方法
-</span><span class='line'>
-</span><span class='line'>// 从Function.prototype获得属性
-</span><span class='line'>Array.arguments;
-</span><span class='line'>Array.length;
-</span><span class='line'>
-</span><span class='line'>// 从Ojbect.prototype获得属性</span></code></pre></td></tr></table></div></figure>
-
-
-<p>类型方法</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Array.isArray();
-</span><span class='line'>
-</span><span class='line'>// 从Function.prototype获得方法
-</span><span class='line'>Array.apply();
-</span><span class='line'>Array.bind();
-</span><span class='line'>...
-</span><span class='line'>
-</span><span class='line'>// 从Object.prototype获得方法
-</span><span class='line'>Array.__defineGetter__();
-</span><span class='line'>Array.__defineSetter__();
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+<h5>Object.seal</h5>
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/20/js-api-lie-biao/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -367,7 +171,7 @@
 
 <ul>
 <li>字面值单独出现没有任何意义（存储在内存中，又没有办法找到它）</li>
-<li>字面值可以赋给个变量</li>
+<li>字面值可以赋给某个变量</li>
 <li>字面值可以出现在表达式中</li>
 </ul>
 

@@ -105,7 +105,7 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 
 <ul>
 <li>字面值单独出现没有任何意义（存储在内存中，又没有办法找到它）</li>
-<li>字面值可以赋给个变量</li>
+<li>字面值可以赋给某个变量</li>
 <li>字面值可以出现在表达式中</li>
 </ul>
 
@@ -191,7 +191,7 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 
 <ul>
 <li>只有一个值null</li>
-<li>表示空的Object，虽然Null表示的Object，但是与Object类型有很多差别，所以单独属于一个类型。</li>
+<li>表示空的Object，虽然Null表示的空Object，但是与Object类型有很多差别，所以单独属于一个类型。</li>
 <li>只有下面1中情况生成Null类型的数据</li>
 </ul>
 </li>
@@ -199,7 +199,11 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>        <span class="c1">// 直接赋值        </span>
+</span><span class='line'>
+</span><span class='line'><span class="k">typeof</span> <span class="kc">null</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span> <span class="c1">// true</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -209,7 +213,7 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 <ul>
 <li>只有两个值true和false</li>
 <li>表示<code>真</code>或<code>假</code>，用于各种条件判断</li>
-<li>虽然只有两个值，但是js中所有其他类型都可以转换成Boolean类型，而且任何需要Boolean类型的地方对会进行这种转换。</li>
+<li>虽然只有两个值，但是js中所有其他类型都可以转换成Boolean类型，而且任何需要Boolean类型的地方都会自动进行这种转换。</li>
 <li>下面情况会获得true值</li>
 </ul>
 </li>
@@ -231,7 +235,7 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 </span><span class='line'>
 </span><span class='line'><span class="c1">// 特别注意</span>
 </span><span class='line'><span class="k">if</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">){}</span>               <span class="c1">// &#39;0&#39; 是非空字符串所以是true</span>
-</span><span class='line'><span class="k">if</span><span class="p">({}){}</span>                <span class="c1">// {} 是Object的字面值表达方式</span>
+</span><span class='line'><span class="k">if</span><span class="p">({}){}</span>                <span class="c1">// {} 是Object的字面值表达方式，也是true</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -377,7 +381,7 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 
 <ul>
 <li>Function类型是Object类型的对象，即通过<code>new Object()</code>生成的对象（在js解释器内部实现的）。</li>
-<li>Function类型也是一个数据类型，用于表示所有的函数类型的对象（即函数）。</li>
+<li>Function类型也是一个数据类型，所以通过<code>new Function</code>可以得到一个js函数对象，也叫做Function类型的对象。</li>
 <li>文章后面对 Function类型的数据 和 Function类型的对象 和 函数 不做区分，都是一个意思
 
 <ul>
@@ -501,12 +505,12 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 </ul>
 
 
-<h4>Object 类型的对象特性（new 出来的对象）</h4>
+<h4>Object 类型的对象特性（new 出来的Object对象）</h4>
 
 <ul>
 <li>使用<code>.</code>操作添加属性和方法</li>
-<li>使用<code>.</code>操作调服对象的属性和方法</li>
-<li>注意：new出来对象默认是没有任何属性的，只能先使用<code>.</code>操作符添加属性，之后在使用。</li>
+<li>使用<code>.</code>操作调用对象的属性和方法</li>
+<li>注意：new出来Object对象默认是没有任何属性的，只能先使用<code>.</code>操作符添加属性，之后在使用。</li>
 </ul>
 
 
@@ -535,10 +539,11 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h4>Function 类型的对象特性（new 出来的对象）</h4>
+<h4>Function 类型的对象特性（new 出来的Function对象）</h4>
 
 <ul>
-<li>自动获得Function类型的prototype属性的所有方法和属性，如同本身对象的属性和方法一样</li>
+<li>自动获得Function类型的prototype属性中的所有方法和属性，如同本身对象的属性和方法一样，所有new出来的对象之间共享这些属性和方法（即，修改一处，其他对象中的这些属性和方法都会变化）</li>
+<li><code>new Function</code>出来的对象，本身也代表一类数据类型，所以可以继续<code>new 该对象</code>获得新的对象。</li>
 </ul>
 
 
@@ -573,7 +578,7 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 <h4>关于new操作符</h4>
 
 <ul>
-<li>后面添加Function类型的对象</li>
+<li>后面只能添加Function类型的对象</li>
 </ul>
 
 
@@ -678,12 +683,34 @@ var age = 10; // age 变量；10 字面值 字面值 内存中保存的一种数
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="s1">&#39;q.i.n&#39;</span><span class="p">.</span><span class="nx">split</span><span class="p">(.);</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">// 解释器内部过程</span>
 </span><span class='line'><span class="kd">var</span> <span class="nx">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">String</span><span class="p">(</span><span class="s1">&#39;q.i.n&#39;</span><span class="p">);</span>
 </span><span class='line'><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">tmp</span><span class="p">.</span><span class="nx">split</span><span class="p">(.);</span>
 </span><span class='line'><span class="k">delete</span> <span class="nx">tmp</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="s1">&#39;qindamoni&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 临时创建String类型的tmp对象，将tmp.age = 10</span>
+</span><span class='line'><span class="nx">a</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 收回临时创建的，销毁tmp对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// undefiend ，age是添加到tmp上面的，这里已经被销毁了</span>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">age</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
