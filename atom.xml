@@ -4,7 +4,7 @@
   <title><![CDATA[Qindamoni]]></title>
   <link href="http://qindamoni.com/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2014-12-30T02:02:23+08:00</updated>
+  <updated>2015-02-07T08:41:51+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -12,6 +12,165 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Vim技巧总结]]></title>
+    <link href="http://qindamoni.com/blog/2015/01/13/vimji-qiao-zong-jie/"/>
+    <updated>2015-01-13T00:05:40+08:00</updated>
+    <id>http://qindamoni.com/blog/2015/01/13/vimji-qiao-zong-jie</id>
+    <content type="html"><![CDATA[<ul>
+<li>重复删除单个单词</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>x
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重复删除单行</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dd
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重复缩进当前行及后面的行</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;G
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<ul>
+<li>重复每个行后面添加;号</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>A;&lt;Esc&gt;
+</span><span class='line'>j
+</span><span class='line'>.
+</span><span class='line'>j
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>直接进入编辑模式的组合符号</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C = c$          // 当前位置删到行尾 
+</span><span class='line'>s = cl          // 当前位置删除
+</span><span class='line'>S = 0c          // 当前位置删到行首
+</span><span class='line'>I = 0i          // 行首插入
+</span><span class='line'>A = $a          // 行尾插入
+</span><span class='line'>o = A&lt;Enter&gt;    // 下行插入
+</span><span class='line'>O = ko          // 上行插入</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>指定+号两侧插入空格，可重复操作</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>f+
+</span><span class='line'>s + 
+</span><span class='line'>;
+</span><span class='line'>.
+</span><span class='line'>;
+</span><span class='line'>.
+</span><span class='line'>;</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重复与回滚</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>修改回滚            .   u
+</span><span class='line'>行内查找    f+      ;   ,
+</span><span class='line'>全文查找    /+      n   N
+</span><span class='line'>全文查找    ?+      n   N
+</span><span class='line'>替换回滚    :s/1/2  &   u</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>查找指定单词并修改，可重复操作</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*               // 全文查找当前光标下的单词
+</span><span class='line'>cw{abc}&lt;Esc&gt;
+</span><span class='line'>n
+</span><span class='line'>.
+</span><span class='line'>n
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>删除单个单词delete a word，可重复</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>daw
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Js Api 列表]]></title>

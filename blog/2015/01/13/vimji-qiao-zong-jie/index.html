@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Vim技巧总结 - Qindamoni</title>
+  <meta name="author" content="Qindamoni">
+
+  
+  <meta name="description" content="重复删除单个单词 1
+2
+3
+x
+.
+. 重复删除单行 1
+2
+3
+dd
+.
+. 重复缩进当前行及后面的行 1
+2
+3
+&gt;G
+.
+. 重复每个行后面添加;号 1
+2
+3
+4
+5
+A;&lt;Esc&gt;
+j
+.
+j
+. 直接进入编辑模式的组合符号 1
+2
+3
+4
+5
+6
+7
+C = c &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://qindamoni.com/blog/2015/01/13/vimji-qiao-zong-jie">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Qindamoni" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <!-- qindamoni script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
+  <script src="/javascripts/libs/jquery.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--qindamoni link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+<!--qindamoni link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Qindamoni</a></h1>
+  
+    <h2>A code farmers blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:qindamoni.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Vim技巧总结</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T00:05:40+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:05 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><ul>
+<li>重复删除单个单词</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>x
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重复删除单行</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dd
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重复缩进当前行及后面的行</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;G
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<ul>
+<li>重复每个行后面添加;号</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>A;&lt;Esc&gt;
+</span><span class='line'>j
+</span><span class='line'>.
+</span><span class='line'>j
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>直接进入编辑模式的组合符号</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C = c$          // 当前位置删到行尾 
+</span><span class='line'>s = cl          // 当前位置删除
+</span><span class='line'>S = 0c          // 当前位置删到行首
+</span><span class='line'>I = 0i          // 行首插入
+</span><span class='line'>A = $a          // 行尾插入
+</span><span class='line'>o = A&lt;Enter&gt;    // 下行插入
+</span><span class='line'>O = ko          // 上行插入</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>指定+号两侧插入空格，可重复操作</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>f+
+</span><span class='line'>s + 
+</span><span class='line'>;
+</span><span class='line'>.
+</span><span class='line'>;
+</span><span class='line'>.
+</span><span class='line'>;</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重复与回滚</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>修改回滚            .   u
+</span><span class='line'>行内查找    f+      ;   ,
+</span><span class='line'>全文查找    /+      n   N
+</span><span class='line'>全文查找    ?+      n   N
+</span><span class='line'>替换回滚    :s/1/2  &   u</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>查找指定单词并修改，可重复操作</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*               // 全文查找当前光标下的单词
+</span><span class='line'>cw{abc}&lt;Esc&gt;
+</span><span class='line'>n
+</span><span class='line'>.
+</span><span class='line'>n
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>删除单个单词delete a word，可重复</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>daw
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Qindamoni</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T00:05:40+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:05 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/12/20/js-api-lie-biao/" title="Previous Post: js api 列表">&laquo; js api 列表</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/13/vimji-qiao-zong-jie/">Vim技巧总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/20/js-api-lie-biao/">Js Api 列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/20/shen-ru-li-jie-jsshu-ju-lei-xing/">深入理解js数据类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/markdown-yu-fa/">Markdown 语法</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Qindamoni -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
