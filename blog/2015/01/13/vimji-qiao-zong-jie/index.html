@@ -266,6 +266,149 @@ C = c &hellip;">
 </span><span class='line'>.
 </span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
 
+
+<ul>
+<li>操作符 ＋ 动作</li>
+</ul>
+
+
+<p>操作符</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>c       // 修改
+</span><span class='line'>d       // 删除
+</span><span class='line'>y       // 复制
+</span><span class='line'>&gt;       // 缩进
+</span><span class='line'>&lt;       // 缩小
+</span><span class='line'>=       // 自动缩进</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重复操作符表示当前行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cc
+</span><span class='line'>dd
+</span><span class='line'>yy
+</span><span class='line'>&gt;&gt;
+</span><span class='line'>&lt;&lt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>动作</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>j h l k
+</span><span class='line'>aw      // 一个单词
+</span><span class='line'>ap      // 一个段落
+</span><span class='line'>gg      // 文档首
+</span><span class='line'>G       // 文档尾
+</span><span class='line'>0       // 行首
+</span><span class='line'>$       // 行尾</span></code></pre></td></tr></table></div></figure>
+
+
+<p>常见组合</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>daw     // 删除一个单词
+</span><span class='line'>yaw     // 复制一个单词
+</span><span class='line'>&gt;G</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>插入模式，快速操作</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Ctrl&gt;h     // 删除前面一个字符
+</span><span class='line'>&lt;Ctrl&gt;w     // 删除前面一个单词
+</span><span class='line'>&lt;Ctrl&gt;u     // 删至行首</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>插入模式，简单运算</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>i
+</span><span class='line'>&lt;Ctrl&gt;r=100+100</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>插入模式，输入unicode编码</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>i
+</span><span class='line'>&lt;Ctrl&gt;v65       // A</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>可视模式</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>v       // 面向字符的可视化模式
+</span><span class='line'>V       // 面向行的可视化模式
+</span><span class='line'>&lt;Ctrl&gt;v // 面向列的可视化模式
+</span><span class='line'>gv      // 重选上次的高亮区域</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Vj
+</span><span class='line'>&gt;
+</span><span class='line'>.
+</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Ctrl&gt;v
+</span><span class='line'>j
+</span><span class='line'>x 
+</span><span class='line'>gv
+</span><span class='line'>r|
+</span><span class='line'>yyp
+</span><span class='line'>Vr-</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
