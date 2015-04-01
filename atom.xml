@@ -4,7 +4,7 @@
   <title><![CDATA[Qindamoni]]></title>
   <link href="http://qindamoni.com/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2015-04-02T04:07:11+08:00</updated>
+  <updated>2015-04-02T04:08:57+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -81,6 +81,9 @@
 </span><span class='line'>    <span class="k">return</span> <span class="n">sm_pSharedApplication</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
 
 
 <h3>Application对象run()方法</h3>
