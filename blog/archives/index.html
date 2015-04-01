@@ -9,11 +9,12 @@
   <meta name="author" content="Qindamoni">
 
   
-  <meta name="description" content="Blog Archive 2015 Vim技巧总结
+  <meta name="description" content="Blog Archive 2015 Shell语法总结
+Mar 31 2015 Vim技巧总结
 Jan 13 2015 2014 Js Api 列表
 Dec 20 2014 深入理解js数据类型
 Dec 20 2014 Markdown 语法
-Dec 17 2014 Recent Posts Vim技巧总结 Js Api 列表 &hellip;">
+Dec 17 2014 Recent Posts &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -55,7 +56,7 @@ Dec 17 2014 Recent Posts Vim技巧总结 Js Api 列表 &hellip;">
 <form action="https://www.google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:qindamoni.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" results="0"/>
   </fieldset>
 </form>
   
@@ -81,6 +82,16 @@ Dec 17 2014 Recent Posts Vim技巧总结 Js Api 列表 &hellip;">
 
   
   <h2>2015</h2>
+
+<article>
+  
+<h1><a href="/blog/2015/03/31/shellyu-fa-zong-jie/">Shell语法总结</a></h1>
+<time datetime="2015-03-31T18:42:47+08:00" pubdate><span class='month'>Mar</span> <span class='day'>31</span> <span class='year'>2015</span></time>
+
+
+</article>
+
+
 
 <article>
   
@@ -137,6 +148,10 @@ Dec 17 2014 Recent Posts Vim技巧总结 Js Api 列表 &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/31/shellyu-fa-zong-jie/">Shell语法总结</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/13/vimji-qiao-zong-jie/">Vim技巧总结</a>
       </li>
     
@@ -153,6 +168,35 @@ Dec 17 2014 Recent Posts Vim技巧总结 Js Api 列表 &hellip;">
       </li>
     
   </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/qindamoni">@qindamoni</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'qindamoni',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 

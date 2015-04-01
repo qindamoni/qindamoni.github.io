@@ -9,23 +9,12 @@
   <meta name="author" content="Qindamoni">
 
   
-  <meta name="description" content="
-重复删除单个单词 1
-2
-3
-x
-.
-. 重复删除单行 1
-2
-3
-dd
-.
-. 重复缩进当前行及后面的行 1
-2
-3
-&gt;G
-.
-. ">
+  <meta name="description" content="重定向 文件描述符 0 : 标准输入
+1 : 标准输出
+2 : 标准错误输出
+3 : 用户自定义文件描述符
+4 : 用户自定义文件描述符
+5 : &hellip;. ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,7 +56,7 @@ dd
 <form action="https://www.google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:qindamoni.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" results="0"/>
   </fieldset>
 </form>
   
@@ -81,6 +70,55 @@ dd
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/31/shellyu-fa-zong-jie/">Shell语法总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-31T18:42:47+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>6:42 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>重定向</h1>
+
+<ul>
+<li>文件描述符
+
+<ul>
+<li>0 : 标准输入</li>
+<li>1 : 标准输出</li>
+<li>2 : 标准错误输出</li>
+<li>3 : 用户自定义文件描述符</li>
+<li>4 : 用户自定义文件描述符</li>
+<li>5 : &hellip;.</li>
+</ul>
+</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/31/shellyu-fa-zong-jie/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -332,6 +370,10 @@ dd
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/31/shellyu-fa-zong-jie/">Shell语法总结</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/13/vimji-qiao-zong-jie/">Vim技巧总结</a>
       </li>
     
@@ -348,6 +390,35 @@ dd
       </li>
     
   </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/qindamoni">@qindamoni</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'qindamoni',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 

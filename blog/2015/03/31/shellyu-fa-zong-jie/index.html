@@ -1,0 +1,1660 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Shell语法总结 - Qindamoni</title>
+  <meta name="author" content="Qindamoni">
+
+  
+  <meta name="description" content="重定向 文件描述符 0 : 标准输入
+1 : 标准输出
+2 : 标准错误输出
+3 : 用户自定义文件描述符
+4 : 用户自定义文件描述符
+5 : &hellip;. 文件描述符前面增加 &amp; 即可得到该描述符对应的文件句柄，可以向文件输入输出内容 1
+$ error_bin 2&gt; &1 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://qindamoni.com/blog/2015/03/31/shellyu-fa-zong-jie">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Qindamoni" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <!-- qindamoni script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
+  <script src="/javascripts/libs/jquery.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--qindamoni link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+<!--qindamoni link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Qindamoni</a></h1>
+  
+    <h2>&nbsp;</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:qindamoni.com" />
+    <input class="search" type="text" name="q" results="0"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Shell语法总结</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-31T18:42:47+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>6:42 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1>重定向</h1>
+
+<ul>
+<li>文件描述符
+
+<ul>
+<li>0 : 标准输入</li>
+<li>1 : 标准输出</li>
+<li>2 : 标准错误输出</li>
+<li>3 : 用户自定义文件描述符</li>
+<li>4 : 用户自定义文件描述符</li>
+<li>5 : &hellip;.</li>
+</ul>
+</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>文件描述符前面增加 <code>&amp;</code> 即可得到该描述符对应的文件句柄，可以向文件输入输出内容</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ error_bin 2&gt; &1   //将错误信息重定向输入到&1(标准输出管道文件句柄)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>创建自定文件描述符</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 创建文件描述符3，输出到&amp;3的所有内容会被保存到a.txt文件中</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">exec </span>3&gt; a.txt
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni &gt;<span class="p">&amp;</span>3
+</span><span class='line'><span class="nv">$ </span>cat a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 创建文件描述符3，文件a.txt输入新的内容被绑定到文件描述符3</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">exec </span>3&lt; a.txt
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span><span class="nb">read </span>a<span class="p">;</span><span class="nb">echo</span> <span class="nv">$a</span><span class="o">)</span> &lt;<span class="p">&amp;</span>3
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 创建文件描述符3，a.txt的输入绑定到文件描述符3。&amp;3的输入绑定到a.txt</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">exec </span>3&lt;&gt; a.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>销毁自定义文件描述符</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">exec </span>3&gt;<span class="p">&amp;</span>-
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重定向标识
+
+<ul>
+<li><code>&gt;</code> : 输出重定向
+
+<ul>
+<li>只能与输出相关的命令配合使用
+
+<ul>
+<li><code>echo</code>，<code>cat</code>，<code>ls</code> 等
+
+<ul>
+<li>因为这些命令默认都是将信息打印到标准输出中，所以重定这些命令的标准输出到其他位置才有意义。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>标识左侧内容
+
+<ul>
+<li>只能是文件描述符:1和2等
+
+<ul>
+<li>理论上左侧内容也可以是0，3，4 等，但是没有哪个输出命令回向这些文件输出内容（一般都是标准输出），所以就算重定向0，3，4到其他位置也没有意义，本来就没有内容。</li>
+</ul>
+</li>
+<li>文件描述符与标识之间不能有空格。<code>1&gt;</code> 正确；<code>1 &gt;</code> 错误</li>
+<li>如果左侧什么都不写，默认表示1（标准输出描述符）</li>
+</ul>
+</li>
+<li>标识右侧内容
+
+<ul>
+<li>文本文件，管道文件 等</li>
+<li><code>1&gt; a.txt</code>，<code>2&gt; &amp;1</code></li>
+</ul>
+</li>
+<li><code>&gt;&gt;</code> 两个标识标示追加的形式添加信息，只能用于文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># </span>
+</span><span class='line'><span class="c"># echo 命令只会向标准输出句柄打印信息，下面例子将echo命令的标准输出1重定向到a.txt文件中，从而将字符qindamoni保存到文件a.txt中</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 1&gt; a.txt
+</span><span class='line'><span class="c"># 等同</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni &gt;a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># cat 命令只会向标准输出句柄打印信息，通过将标准输出1重定向到b.txt文件，将输出保存到b.txt中</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span>cat a.txt 1&gt; b.txt
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 道理同上</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span>ls 1&gt; c.txt
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 标准错误输出，即命令如果出错，bash会将错误信息发送到标准错误句柄，通过文件描述符2可以重定向该信息</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span>error_bin 2&gt; a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 同时指定多个文件描述符</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 1&gt; a.txt 2&gt; a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 通过 &amp; + 文件描述符 可以获得该文件描述符所代表的文件句柄</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 标准输出重定向到a.txt，标准错误重定向到&amp;1（标准输出句柄）</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 1&gt; a.txt 2&gt;<span class="p">&amp;</span><span class="m">1</span>                  // 注意只要使用文件描述符，中间不能有空格<span class="o">(</span>&gt;<span class="p">&amp;</span>1<span class="o">)</span>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 2&gt;<span class="p">&amp;</span><span class="m">1</span> 1&gt; a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c"># 标准错误重定向到a.txt，标准输出重定向到&amp;2（标准错误句柄）</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 2&gt; a.txt 1&gt;<span class="p">&amp;</span>2
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 1&gt; <span class="p">&amp;</span><span class="m">2</span> 2&gt;a.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><ul>
+<li><code>&lt;</code> : 输入重定向
+
+<ul>
+<li>只能与输入命令配合使用
+
+<ul>
+<li><code>read</code>，<code>cat</code>,<code>grep</code> 等
+
+<ul>
+<li>因为这些命令默认只从标准输入中读取内容，所以重定向这些命令的标准输入到其他位置才有意义。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>标示符左侧内容
+
+<ul>
+<li>只能是文件描述符：0(标准输入文件描述符)。
+
+<ul>
+<li>理论上左侧内容也可以是1，2，3等，但是没有哪个命令会从这些描述符中读取信息，所以就算重定向到1，2，3也没有意义。</li>
+</ul>
+</li>
+<li>如果左侧什么都不写，默认是0。</li>
+</ul>
+</li>
+<li>标示符右侧内容
+
+<ul>
+<li>文本文件，管道文件等</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># cat 命令后面如果不跟任何文件名，表示从标准输入读取信息并打印，下面例子将标准输入重定向到a.txt，直接打印了a.txt的内容</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">111</span> 1&gt; a.txt
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">222</span> 1&gt; a.txt
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">333</span> 1&gt; a.txt
+</span><span class='line'><span class="nv">$ </span>cat 0&lt; a.txt
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ </span>cat &lt; a.txt
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ </span>0&lt; a.txt cat
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># grep 命令后面如果不跟任何文件名，表示从标准输入读取信息并处理信息，下面例子将标准输入重定到a.txt</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span>grep <span class="m">1</span> 0&lt; a.txt               // 打印111
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># read 命令只会从标准输入读取一行数据（用换行符截断），下面例子将标准输入重定向到a.txt。打印了第一行信息</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span><span class="nb">read </span>a<span class="p">;</span><span class="nb">echo</span> <span class="nv">$a</span><span class="o">)</span> 0&lt; a.txt     // 打印111
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span><span class="nb">read </span>a<span class="p">;</span><span class="nb">echo</span> <span class="nv">$a</span><span class="o">)</span> 0&lt; a.txt     // 打印111
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span><span class="nb">read </span>a<span class="p">;</span><span class="nb">echo</span> <span class="nv">$a</span><span class="o">)</span> 0&lt; a.txt     // 打印111
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 当前环境中创建一个自定义文件描述符3，与文件b.txt绑定。环境中3会保存当前信息，直到退出bash</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">exec </span>3&lt;&gt; b.txt
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">111</span> &gt;&gt; b.txt
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">222</span> &gt;&gt; b.txt
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">333</span> &gt;&gt; b.txt
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span><span class="nb">read </span>a<span class="p">;</span><span class="nb">echo</span> <span class="nv">$a</span><span class="o">)</span> &lt;<span class="p">&amp;</span><span class="m">3</span>          // 打印111
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span><span class="nb">read </span>a<span class="p">;</span><span class="nb">echo</span> <span class="nv">$a</span><span class="o">)</span> &lt;<span class="p">&amp;</span><span class="m">3</span>          // 打印222
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span><span class="nb">read </span>a<span class="p">;</span><span class="nb">echo</span> <span class="nv">$a</span><span class="o">)</span> &lt;<span class="p">&amp;</span><span class="m">3</span>          // 打印333
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">123</span> &gt; a.txt
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span><span class="m">123</span> 1&gt; a.txt
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ </span>1&gt; a.txt <span class="nb">echo </span>123
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ </span>&gt;a.txt <span class="nb">echo </span>123
+</span><span class='line'>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># 重定向原理：echo 程序在内部实现的时候会调用系统的标准输出库（类似cout &lt;&lt;）</span>
+</span><span class='line'><span class="c"># echo 程序本身不清楚调用的标准输出库具体会打印到什么地方</span>
+</span><span class='line'><span class="c"># 通过环境设置1&gt; a.txt系统已经改变了标准输出的打印位置，对此echo并不知情，echo只会往标准输出的地方打印</span>
+</span><span class='line'><span class="c"># 类似指针的概念，此时的标准输出已经指向a.txt文件，所以echo的内容会打印到a.txt文件中</span>
+</span><span class='line'><span class="c">#</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>管道</h1>
+
+<ul>
+<li>管道是一种特殊的文件，由linux操作系统提供并实现。</li>
+<li>管道文件可以写入内容，也可以读取内容
+
+<ul>
+<li>C 语言使用write，read等系统库函数实现管道文件的读和写。</li>
+<li>shell 中只能通过将输出命令的标准输出文件描述符重定向到管道文件，或者将输入命令的标准输入文件描述符重定向到管道文件来实现。
+
+<ul>
+<li><code>echo qindamoni 1&gt; 管道文件</code></li>
+<li><code>cat 0&lt; 管道文件</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>管道文件用于将信息从一个命令传递到另外一个命令中（也可以理解成从一个进程传递到另外一个进程）</li>
+<li>管道文件由操作系统提供维护
+
+<ul>
+<li>管道文件自动保存文件游标的状态</li>
+<li>管道文件两侧写入和输出是阻塞的
+
+<ul>
+<li>一个输入命令（应用程序）从管道读取信息，如果管道内容空，那么该命令会一直等待，直到管道中有内容。
+
+<ul>
+<li>就像从标准输入读取的read命令一样，程序执行到read方法就会阻塞程序，等待用户输入，直到遇见换行符，程序才会继续。</li>
+</ul>
+</li>
+<li>一个输出命令向管道写入信息，如果写入的信息没有被管道另一头的输入命令取走，那么输出命令也会一直等待直到他输入的信息被取走。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Linux中通过mkfifo可以创建管道文件</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkfifo a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c"># 窗口1</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 1&gt; a.txt
+</span><span class='line'><span class="c"># 窗口2</span>
+</span><span class='line'><span class="nv">$ </span>cat 0&lt; a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c"># 窗口1</span>
+</span><span class='line'><span class="nv">$ </span>ls &gt; a.txt
+</span><span class='line'><span class="c"># 窗口2</span>
+</span><span class='line'><span class="nv">$ </span>cat &lt; a.txt
+</span><span class='line'>
+</span><span class='line'><span class="c"># 窗口1</span>
+</span><span class='line'><span class="nv">$ </span><span class="k">while</span><span class="p">;</span><span class="k">do</span> cat &lt; a.txt<span class="p">;</span><span class="k">done</span>
+</span><span class='line'><span class="c"># 窗口2</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni &gt; a.txt
+</span><span class='line'><span class="nv">$ </span>ls &gt; a.txt
+</span><span class='line'><span class="nv">$ </span>df -h &gt; a.txt
+</span><span class='line'><span class="nv">$ </span>// 其他任何有输出的命令，将标准输出重定向到a.txt，即可在窗口1看到结果
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkfifo b.txt
+</span><span class='line'>
+</span><span class='line'><span class="c"># 窗口1</span>
+</span><span class='line'><span class="nv">$ </span><span class="o">(</span>cat 0&lt; b.txt<span class="o">)</span> <span class="p">&amp;</span>              // 后台运行，等同于一个新的bash子进程
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 1&gt; b.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Linux 操作系统匿名管道 <code>|</code>
+
+<ul>
+<li>原理与上面的例子一样</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni <span class="p">|</span> cat
+</span><span class='line'><span class="nv">$ </span>ls <span class="p">|</span> cat
+</span><span class='line'><span class="nv">$ </span>df -h <span class="p">|</span> cat
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><ul>
+<li>匿名管道只会将前面命令的标准输出转发到后面命令的标准输入中</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># 不会达到预期效果</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni 1&gt; a.txt <span class="p">|</span> cat
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><ul>
+<li>匿名管道后面的命令必须是输入命令（read，cat，grep）等能够接受标准输入的命令
+
+<ul>
+<li>输入命令后<code>回车</code>，如果命令是待读取状态，那么该命令就是接受标准输入的命令</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># 一些输入命令</span>
+</span><span class='line'><span class="nv">$ </span>grep <span class="s1">&#39;qindamoni&#39;</span> <span class="se">\n</span>
+</span><span class='line'><span class="nv">$ </span>cat <span class="se">\n</span>
+</span><span class='line'><span class="nv">$ </span>more <span class="se">\n</span>
+</span><span class='line'><span class="nv">$ </span>tail <span class="se">\n</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">read</span> <span class="se">\n</span>
+</span><span class='line'>&gt;
+</span><span class='line'>
+</span><span class='line'><span class="c"># 不到达到预期效果，echo命令不接受标准输入</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>qindamoni <span class="p">|</span> <span class="nb">echo</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>管道与重定向综合应用</h2>
+
+<ul>
+<li>需求
+
+<ul>
+<li>假设jpeg.sh是将其他格式的图片转换为jpeg格式的脚本程序。目前有将近1000张图片需要处理。因为有些图片太大，导致jpeg.sh在转换一张图片的时间太长。</li>
+<li>希望同时执行多个jpeg.sh（多进程）脚本来提高整体的速度。当前机器为8核linux系统，所以希望同时执行8个进程执行脚本。</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'>mkfifo tmp.fifo
+</span><span class='line'><span class="nb">exec </span>3&lt;&gt;tmp.fifo
+</span><span class='line'>
+</span><span class='line'><span class="nv">coreNum</span><span class="o">=</span>8
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span><span class="o">((</span><span class="nv">i</span><span class="o">=</span>0<span class="p">;</span>i &lt; <span class="nv">$coreNum</span><span class="p">;</span>i++<span class="o">))</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    <span class="nb">echo</span> <span class="s1">&#39;&#39;</span> 1&gt;<span class="p">&amp;</span>3
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> file in <span class="s2">&quot;/image/path/&quot;</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    <span class="nb">read </span>0&lt;<span class="p">&amp;</span><span class="m">3</span>                               // 父进程循环读取管道3，如果没有内容那么阻塞等待有内容进来
+</span><span class='line'>    <span class="o">(</span>jpeg.sh <span class="nv">$file</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s1">&#39;&#39;</span> 1&gt;<span class="p">&amp;</span>3<span class="o">)</span><span class="p">&amp;</span>        // 创建子进程，子进程完毕后将信息发给管道3
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">wait</span>            // 等待所有子进程完毕
+</span><span class='line'><span class="nb">exec </span>3&gt;<span class="p">&amp;</span>0
+</span><span class='line'>rm tmp.fifo
+</span><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>shell语法</h1>
+
+<h3>通配符</h3>
+
+<ul>
+<li>bash 中大部分命令都对通配符支持，而且各个命令间的解析方式统一。
+
+<ul>
+<li>默认状态下所有命令都将通配符与当前目录中的文件进行匹配</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ls *
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> *
+</span><span class='line'><span class="nv">$ </span><span class="k">for</span> i in *
+</span><span class='line'><span class="nv">$ </span>cat *
+</span><span class='line'><span class="nv">$ </span>grep qindamoni *
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><ul>
+<li>匹配任意单词 <code>?</code></li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ls *
+</span><span class='line'>abc cde def
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span>ls a?c
+</span><span class='line'>abc
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>a?c
+</span><span class='line'>abc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><ul>
+<li>匹配指定单词 <code>[abcd]</code></li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ls a<span class="o">[</span>abc<span class="o">]</span>c
+</span><span class='line'>abc
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo </span>a<span class="o">[</span>abc<span class="o">]</span>c
+</span><span class='line'>abc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><ul>
+<li>匹配指定多个单词  <code>{abcd}</code></li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ls <span class="o">{</span>ab,bc<span class="o">}</span>c
+</span><span class='line'>abc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>变量</h2>
+
+<ul>
+<li>shell中所有变量都是字符串，即使赋值是数字也当字符串看到。
+
+<ul>
+<li>一些命令在需要的数字的时候会自己将字符串变量转换成数字来计算。</li>
+</ul>
+</li>
+<li>变量赋值使用 <code>=</code> 而且 <code>=</code> 两边不能有空格
+
+<ul>
+<li>如果赋值内容包含空格，那么需要加上引号。</li>
+</ul>
+</li>
+<li>使用 <code>$</code> 可以获取变量值
+
+<ul>
+<li>$a 放到双引号中会自动转换为他的值</li>
+<li>$a 放到单引号，原样输出</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>环境变量</h3>
+
+<ul>
+<li>全局变量，可以在当前进程直接使用的变量</li>
+<li>子进程会继承父进程的环境变量</li>
+<li>系统环境变量
+
+<ul>
+<li>由操作系统赋值，在shell程序中可以直接使用
+
+<ul>
+<li>$HOME
+
+<ul>
+<li>家目录</li>
+</ul>
+</li>
+<li>$PATH
+
+<ul>
+<li>搜索目录</li>
+</ul>
+</li>
+<li>$PS1
+
+<ul>
+<li>提示符</li>
+</ul>
+</li>
+<li>$PS2
+
+<ul>
+<li>二级提示符，就是待读取状态下的提示符</li>
+</ul>
+</li>
+<li>$IFS
+
+<ul>
+<li>默认输入分隔符</li>
+</ul>
+</li>
+<li>$0
+
+<ul>
+<li>脚本的名字</li>
+</ul>
+</li>
+<li>$#
+
+<ul>
+<li>脚本参数的个数</li>
+</ul>
+</li>
+<li>$$
+
+<ul>
+<li>进程号</li>
+</ul>
+</li>
+<li>$?
+
+<ul>
+<li>上一个命令的返回值(exit 0 或 1)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>自定义环境变量
+
+<ul>
+<li>用户自己定义的环境变量
+
+<ul>
+<li><code>name=qindamoni command.sh</code> name 是程序command.sh的环境变量</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>shell程序中使用 <code>env</code> 可以获得当前进程的环境变量
+
+<ul>
+<li>c 中getenv(&ldquo;HOME&rdquo;)</li>
+<li>php 中getenv(&ldquo;HOME&rdquo;)</li>
+<li>python 中os.getenv(&ldquo;HOME&rdquo;)</li>
+</ul>
+</li>
+<li>普通变量使用 <code>export</code> 可以将普通变量赋值给子进程的环境变量</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># 直接使用环境变量</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$HOME</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$PATH</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$PS1</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 打印当前bash环境的所有环境变量</span>
+</span><span class='line'><span class="nv">$ </span>env
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="nv">$ a</span><span class="o">=</span><span class="k">$(</span>env<span class="k">)</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$a</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 手动定义子进程的环境变量</span>
+</span><span class='line'><span class="c"># command.sh</span>
+</span><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$name</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ name</span><span class="o">=</span>qindamoni ./command.sh
+</span><span class='line'>
+</span><span class='line'><span class="c"># 普通变量设置子进程环境变量</span>
+</span><span class='line'><span class="c"># command.sh</span>
+</span><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$sex</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span><span class="nb">export </span><span class="nv">sec</span><span class="o">=</span>man
+</span><span class='line'><span class="nv">$ </span>./command.sh
+</span><span class='line'>
+</span><span class='line'><span class="c"># 子进程查看所有环境变量</span>
+</span><span class='line'><span class="c"># command.sh</span>
+</span><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="nv">a</span><span class="o">=</span><span class="k">$(</span>env<span class="k">)</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$a</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span><span class="nb">export </span><span class="nv">x</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">$ </span><span class="nb">export </span><span class="nv">y</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">$ z</span><span class="o">=</span><span class="m">1</span> ./command.sh
+</span><span class='line'>
+</span><span class='line'><span class="c"># 继承</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>参数变量</h3>
+
+<ul>
+<li>通过命令或执行程序后面添加的参数</li>
+<li>shell 脚本中使用 <code>$1</code> <code>$2</code> <code>$3</code> 获取具体位置的参数
+
+<ul>
+<li><code>$1</code> <code>$2</code> <code>$3</code> 具体位置的参数</li>
+<li><code>$*</code> 所有参数，使用IFS中的第一个字符分隔</li>
+<li><code>$@</code> 所有参数，使用空格分割</li>
+</ul>
+</li>
+<li>其他语言的参数变量
+
+<ul>
+<li>c 语言使用main函数的参数argv,argc获取</li>
+<li>php 使用global argv,argc获取</li>
+<li>python 使用os.argv,os.argc获取</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># command.sh</span>
+</span><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$1</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$2</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$3</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$#</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$*</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$@</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> i in <span class="nv">$*</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    <span class="nb">echo</span> <span class="nv">$i</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> i in <span class="nv">$@</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    <span class="nb">echo</span> <span class="nv">$i</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span>./command.sh a b c d e
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>条件</h2>
+
+<ul>
+<li><code>test</code> 或者 <code>[</code> 判断，两个是等价的</li>
+<li><code>test</code> 或者 <code>[</code> 与后面字符之间必须有空格</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">if</span> <span class="nb">test</span> -f a.txt
+</span><span class='line'><span class="k">then</span>
+</span><span class='line'>    <span class="nb">echo </span>qindamoni
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f a.txt <span class="o">]</span>
+</span><span class='line'><span class="k">then</span>
+</span><span class='line'>    <span class="nb">echo </span>qindamoni
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价，如果放到同一行，使用 ; 将test和then分开</span>
+</span><span class='line'><span class="k">if</span> <span class="nb">test</span> -f a.txt<span class="p">;</span><span class="k">then</span>
+</span><span class='line'>    <span class="nb">echo </span>qindamoni
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f a.txt <span class="o">]</span><span class="p">;</span><span class="k">then</span>
+</span><span class='line'>    <span class="nb">echo </span>qindamoni
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>test</code> 命令的本质是一个执行程序，将后面的参数进行判断在返回退出状态(exit 0 或 1)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>which <span class="nb">test</span>
+</span><span class='line'><span class="nv">$ </span>/bin/test <span class="nv">1</span> <span class="o">=</span> 2
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$?</span>
+</span><span class='line'>1
+</span><span class='line'><span class="nv">$ </span>/bin/test <span class="nv">1</span> <span class="o">=</span> 1
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$?</span>
+</span><span class='line'>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>if 指令的本质是判断后面执行的命令的返回状态，如果状态0那么标示true，继续执行。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># command.sh</span>
+</span><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="nb">exit </span>1
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span><span class="k">if</span> command.sh<span class="p">;</span><span class="k">then</span> <span class="nb">echo </span>qindamoni<span class="p">;</span><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>比较符号</h3>
+
+<ul>
+<li>字符串比较
+
+<ul>
+<li>string1 = string2
+
+<ul>
+<li>防止字符串出现[ = &ldquo;yes&rdquo; ]情况，尽量两边都用双引号，[ &ldquo;&rdquo; = &ldquo;yes&rdquo; ]</li>
+</ul>
+</li>
+<li>string1 != string2</li>
+<li>-n string
+
+<ul>
+<li>字符串不为空返回真</li>
+</ul>
+</li>
+<li>-z string
+
+<ul>
+<li>字符串为空返回真</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>算数比较
+
+<ul>
+<li>exp1 -eq exp2
+
+<ul>
+<li>表达式相等返回真</li>
+</ul>
+</li>
+<li>exp1 -ne exp2
+
+<ul>
+<li>表达式不相等返回真</li>
+</ul>
+</li>
+<li>exp1 -gt exp2
+
+<ul>
+<li>exp1 大于 exp2</li>
+</ul>
+</li>
+<li>exp1 -ge exp2
+
+<ul>
+<li>exp1 大于等于 exp2</li>
+</ul>
+</li>
+<li>exp1 -lt exp2
+
+<ul>
+<li>exp1 小于 exp2</li>
+</ul>
+</li>
+<li>exp1 -le exp2
+
+<ul>
+<li>exp1 小于等于 exp2</li>
+</ul>
+</li>
+<li>!exp
+
+<ul>
+<li>exp 假，返回真</li>
+<li>exp 真，返回假</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>文件比较
+
+<ul>
+<li>-d file
+
+<ul>
+<li>目录</li>
+</ul>
+</li>
+<li>-e file
+
+<ul>
+<li>文件存在</li>
+</ul>
+</li>
+<li>-f file
+
+<ul>
+<li>普通文件</li>
+</ul>
+</li>
+<li>-g file
+
+<ul>
+<li>set-group-id</li>
+</ul>
+</li>
+<li>-r file
+
+<ul>
+<li>文件可读</li>
+</ul>
+</li>
+<li>-s file
+
+<ul>
+<li>大小不为0</li>
+</ul>
+</li>
+<li>-u file
+
+<ul>
+<li>set-user-id</li>
+</ul>
+</li>
+<li>-w file
+
+<ul>
+<li>文件可写</li>
+</ul>
+</li>
+<li>-x file
+
+<ul>
+<li>文件可执行</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>控制结构</h2>
+
+<h3>if 语句</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">if</span> condition
+</span><span class='line'><span class="k">then</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="k">if</span> condition<span class="p">;</span><span class="k">then</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="k">if</span> condition<span class="p">;</span><span class="k">then</span> statments<span class="p">;</span><span class="k">else</span> statments<span class="p">;</span><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>elfi 语句</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">if</span> condition
+</span><span class='line'><span class="k">then</span>
+</span><span class='line'>    statments
+</span><span class='line'>elfi condition
+</span><span class='line'><span class="k">then</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>for 语句</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for</span> variable in values
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="k">for</span> variable in values<span class="p">;</span><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 特殊结构</span>
+</span><span class='line'><span class="k">for</span><span class="o">((</span><span class="nv">i</span> <span class="o">=</span> 0<span class="p">;</span>i &lt;<span class="o">=</span> 100<span class="p">;</span>i++<span class="o">))</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 通配符结构</span>
+</span><span class='line'><span class="k">for</span> i in *
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 命令执行结构</span>
+</span><span class='line'><span class="k">for</span> i in <span class="k">$(</span><span class="nb">command</span><span class="k">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>while 语句</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">while</span> condition
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="k">while</span> condition<span class="p">;</span><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 如</span>
+</span><span class='line'><span class="k">while</span> <span class="nb">test</span> -f a.txt<span class="p">;</span><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">while</span> <span class="nb">test </span><span class="nv">a</span> <span class="o">=</span> b<span class="p">;</span><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>until语句</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">until</span> condition
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 等价</span>
+</span><span class='line'><span class="k">until</span> condition<span class="p">;</span><span class="k">do</span>
+</span><span class='line'>    statments
+</span><span class='line'>doen
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>case语句</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">case</span> variable in
+</span><span class='line'>    pattern <span class="o">[</span> <span class="p">|</span> parttern <span class="o">]</span> <span class="o">)</span> statmetns<span class="p">;;</span>
+</span><span class='line'>    pattern <span class="o">[</span> <span class="p">|</span> parttern <span class="o">]</span> <span class="o">)</span> statmetns<span class="p">;;</span>
+</span><span class='line'><span class="k">esac</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 例子</span>
+</span><span class='line'><span class="c"># 判断是严格按照顺序执行的，如果yes满足不会在进入下面y分支</span>
+</span><span class='line'><span class="c"># 必须使用;;结束当前判断</span>
+</span><span class='line'><span class="nb">read </span>a
+</span><span class='line'>
+</span><span class='line'><span class="k">case</span> <span class="s2">&quot;$a&quot;</span> in
+</span><span class='line'>    yes <span class="o">)</span> <span class="nb">echo </span>1<span class="p">;;</span>
+</span><span class='line'>    no <span class="o">)</span> <span class="nb">echo </span>2<span class="p">;;</span>
+</span><span class='line'>    y <span class="o">)</span> <span class="nb">echo </span>3<span class="p">;;</span>
+</span><span class='line'>    n <span class="o">)</span> <span class="nb">echo </span>4<span class="p">;;</span>
+</span><span class='line'>    * <span class="o">)</span> <span class="nb">echo</span> <span class="s2">&quot;all&quot;</span><span class="p">;;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">read </span>a
+</span><span class='line'>
+</span><span class='line'><span class="k">case</span> <span class="s2">&quot;$a&quot;</span> in
+</span><span class='line'>    yes <span class="p">|</span> y <span class="p">|</span> Yes <span class="p">|</span> YES <span class="o">)</span> <span class="nb">echo </span>1<span class="p">;;</span>
+</span><span class='line'>    n* <span class="p">|</span> N* <span class="o">)</span> <span class="nb">echo </span>2<span class="p">;;</span>
+</span><span class='line'>    * <span class="o">)</span>
+</span><span class='line'>ease
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">read </span>a
+</span><span class='line'>
+</span><span class='line'><span class="k">case</span> <span class="s2">&quot;$a&quot;</span> in
+</span><span class='line'>    <span class="o">[</span>yY<span class="o">]</span>* <span class="o">)</span> <span class="nb">echo </span>1<span class="p">;;</span>
+</span><span class='line'>    <span class="o">[</span>nN<span class="o">]</span>* <span class="p">|</span> <span class="o">[</span>a<span class="o">]</span>*<span class="o">)</span> <span class="nb">echo </span>2<span class="p">;;</span>
+</span><span class='line'>    * <span class="o">)</span> <span class="nb">echo </span>3<span class="p">;;</span>
+</span><span class='line'><span class="k">esac</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>命令列表</h3>
+
+<ul>
+<li>AND 列表</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># 如果每个都是true那么最终结果就是true</span>
+</span><span class='line'>statment1 <span class="o">&amp;&amp;</span> statment2 <span class="o">&amp;&amp;</span> statment3
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>OR 列表</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># 如果有一个是true那么最终结果就是true</span>
+</span><span class='line'>statment1 <span class="o">||</span> statment2 <span class="o">||</span> statment3
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Qindamoni</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-03-31T18:42:47+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>6:42 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/13/vimji-qiao-zong-jie/" title="Previous Post: vim技巧总结">&laquo; vim技巧总结</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/31/shellyu-fa-zong-jie/">Shell语法总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/13/vimji-qiao-zong-jie/">Vim技巧总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/20/js-api-lie-biao/">Js Api 列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/20/shen-ru-li-jie-jsshu-ju-lei-xing/">深入理解js数据类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/markdown-yu-fa/">Markdown 语法</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/qindamoni">@qindamoni</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'qindamoni',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Qindamoni -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
