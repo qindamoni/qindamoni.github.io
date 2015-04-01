@@ -4,7 +4,7 @@
   <title><![CDATA[Qindamoni]]></title>
   <link href="http://qindamoni.com/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2015-04-01T14:40:58+08:00</updated>
+  <updated>2015-04-02T04:07:11+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -12,6 +12,1576 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Cocos2d源码分析]]></title>
+    <link href="http://qindamoni.com/blog/2015/04/01/cocos2dyuan-ma-fen-xi/"/>
+    <updated>2015-04-01T19:35:01+08:00</updated>
+    <id>http://qindamoni.com/blog/2015/04/01/cocos2dyuan-ma-fen-xi</id>
+    <content type="html"><![CDATA[<ul>
+<li>本文是基于cocosd2x 3.4 mac工程进行解析
+
+<ul>
+<li>文档编写时cocos2dx最新版本为3.4finnal，本文基于该版本</li>
+<li>mac 工程的openGL渲染部分是基于开源 GLFW 编写的，方便查阅</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>程序总入口main函数</h3>
+
+<figure class='code'><figcaption><span>main.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">AppDelegate</span> <span class="n">app</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">Application</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义AppDelegate对象</li>
+<li>自动调用父类构造函数Application()方法</li>
+<li>将自己（app对象）赋给类静态变量sm_pSharedApplication</li>
+<li>this 是app对象的指针，并不是对象本身</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCApplication-mac.mm</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Application</span><span class="o">::</span><span class="n">Application</span><span class="p">()</span><span class="o">:</span> <span class="n">_animationInterval</span><span class="p">(</span><span class="mf">1.0f</span><span class="o">/</span><span class="mf">60.0f</span><span class="o">*</span><span class="mf">1000.0f</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">CCASSERT</span><span class="p">(</span><span class="o">!</span> <span class="n">sm_pSharedApplication</span><span class="p">,</span> <span class="s">&quot;sm_pSharedApplication already exist&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">sm_pSharedApplication</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>通过getInstance()方法获取刚刚定义的app对象</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCApplication-mac.mm</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Application</span><span class="o">*</span> <span class="n">Application</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">CCASSERT</span><span class="p">(</span><span class="n">sm_pSharedApplication</span><span class="p">,</span> <span class="s">&quot;sm_pSharedApplication not set&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">sm_pSharedApplication</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Application对象run()方法</h3>
+
+<figure class='code'><figcaption><span>CCApplication-mac.mm</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">Application</span><span class="o">::</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">initGLContextAttrs</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">applicationDidFinishLaunching</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">long</span> <span class="n">lastTime</span> <span class="o">=</span> <span class="mi">0L</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">long</span> <span class="n">curTime</span> <span class="o">=</span> <span class="mi">0L</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">auto</span> <span class="n">director</span> <span class="o">=</span> <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">auto</span> <span class="n">glview</span> <span class="o">=</span> <span class="n">director</span><span class="o">-&gt;</span><span class="n">getOpenGLView</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">glview</span><span class="o">-&gt;</span><span class="n">retain</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">glview</span><span class="o">-&gt;</span><span class="n">windowShouldClose</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">getCurrentMillSecond</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">mainLoop</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">glview</span><span class="o">-&gt;</span><span class="n">pollEvents</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">curTime</span> <span class="o">=</span> <span class="n">getCurrentMillSecond</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">curTime</span> <span class="o">-</span> <span class="n">lastTime</span> <span class="o">&lt;</span> <span class="n">_animationInterval</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">usleep</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">useconds_t</span><span class="o">&gt;</span><span class="p">((</span><span class="n">_animationInterval</span> <span class="o">-</span> <span class="n">curTime</span> <span class="o">+</span> <span class="n">lastTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">));</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">glview</span><span class="o">-&gt;</span><span class="n">isOpenGLReady</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">mainLoop</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">glview</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>initGLContextAttrs 属于钩子方法，方便用户自行在AppDelegate设定</li>
+<li>初始化openGL的颜色，深度，模版缓存值</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>AppDelegate.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">initGLContextAttrs</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">GLContextAttrs</span> <span class="n">glContextAttrs</span> <span class="o">=</span> <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">8</span><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">GLView</span><span class="o">::</span><span class="n">setGLContextAttrs</span><span class="p">(</span><span class="n">glContextAttrs</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span>CCGLView.h</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">struct</span> <span class="n">GLContextAttrs</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">redBits</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">greenBits</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">blueBits</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">alphaBits</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">depthBits</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">stencilBits</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>_glContextAttrs 变量会在 GLViewImpl::create 初始化openGL时候使用</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCGLView.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">GLView</span><span class="o">::</span><span class="n">setGLContextAttrs</span><span class="p">(</span><span class="n">GLContextAttrs</span><span class="o">&amp;</span> <span class="n">glContextAttrs</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">_glContextAttrs</span> <span class="o">=</span> <span class="n">glContextAttrs</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>用户入口</h3>
+
+<ul>
+<li>AppDelegate文件为用户的入口文件，用户初始配置都可以在该文件进行</li>
+<li>applicationDidFinishLaunching() 方法为从用户角度的第一个入口方法</li>
+<li>一般情况下用户不会修改cocos2dx的底层框架</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>AppDelegate.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">bool</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">applicationDidFinishLaunching</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 初始化Director</span>
+</span><span class='line'>    <span class="k">auto</span> <span class="n">director</span>   <span class="o">=</span> <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">auto</span> <span class="n">glview</span>     <span class="o">=</span> <span class="n">director</span><span class="o">-&gt;</span><span class="n">getOpenGLView</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">glview</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 初始化GLView</span>
+</span><span class='line'>        <span class="n">glview</span> <span class="o">=</span> <span class="n">GLViewImpl</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;My Game&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">setOpenGLView</span><span class="p">(</span><span class="n">glview</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">director</span><span class="o">-&gt;</span><span class="n">setDisplayStats</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">director</span><span class="o">-&gt;</span><span class="n">setAnimationInterval</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">60</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">auto</span> <span class="n">scene</span> <span class="o">=</span> <span class="n">HelloWorld</span><span class="o">::</span><span class="n">createScene</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">director</span><span class="o">-&gt;</span><span class="n">runWithScene</span><span class="p">(</span><span class="n">scene</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>因为第一次调用Director::getInstance()，所以Director会初始化静态变量s_SharedDirector</li>
+<li>从此之后的getInstance调用都是返回的第一次初始化的s_SharedDirector</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCDirector.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Director</span><span class="o">*</span> <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">s_SharedDirector</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">s_SharedDirector</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">DisplayLinkDirector</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">CCASSERT</span><span class="p">(</span><span class="n">s_SharedDirector</span><span class="p">,</span> <span class="s">&quot;FATAL: Not enough memory&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">s_SharedDirector</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">s_SharedDirector</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">bool</span> <span class="n">Director</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 主要设置两个值，__projection 投影方式，Texture2D::g_defaultAlphaPixelFormat 纹理渲染方式</span>
+</span><span class='line'>    <span class="n">setDefaultValues</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 当前执行的场景</span>
+</span><span class='line'>    <span class="n">_runningScene</span>       <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 下一个执行的场景</span>
+</span><span class='line'>    <span class="n">_nextScene</span>          <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_notificationNode</span>   <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 场景堆栈</span>
+</span><span class='line'>    <span class="n">_scenesStack</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// FPS信息初始化</span>
+</span><span class='line'>    <span class="n">_accumDt</span>            <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_frameRate</span>          <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_FPSLabel</span>           <span class="o">=</span> <span class="n">_drawnBatchesLabel</span> <span class="o">=</span> <span class="n">_drawnVerticesLabel</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_totalFrames</span>        <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_lastUpdate</span>         <span class="o">=</span> <span class="k">new</span> <span class="k">struct</span> <span class="n">timeval</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_secondsPerFrame</span>    <span class="o">=</span> <span class="mf">1.0f</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 导演是否暂停</span>
+</span><span class='line'>    <span class="n">_paused</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 导演是否下个循环清除</span>
+</span><span class='line'>    <span class="n">_purgeDirectorInNextLoop</span>    <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 导演是否下个循环重启</span>
+</span><span class='line'>    <span class="n">_restartDirectorInNextLoop</span>  <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_winSizeInPoints</span>    <span class="o">=</span> <span class="n">Size</span><span class="o">::</span><span class="n">ZERO</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// openGL相关的渲染信息都使用该对象</span>
+</span><span class='line'>    <span class="n">_openGLView</span>             <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 缩放</span>
+</span><span class='line'>    <span class="n">_contentScaleFactor</span>     <span class="o">=</span> <span class="mf">1.0f</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 定时器相关，每个循环都会调用该定时器，用户可以在里面注册自己的方法并指定多长时间调用该方法</span>
+</span><span class='line'>    <span class="n">_scheduler</span>      <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Scheduler</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 动画管理器</span>
+</span><span class='line'>    <span class="n">_actionManager</span>  <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">ActionManager</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 将动画管理器注册到_scheduler，之后每个循环都会调用动画管理器的update方法</span>
+</span><span class='line'>    <span class="n">_scheduler</span><span class="o">-&gt;</span><span class="n">scheduleUpdate</span><span class="p">(</span><span class="n">_actionManager</span><span class="p">,</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">PRIORITY_SYSTEM</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 事件调度器，先注册事件，之后触发事件</span>
+</span><span class='line'>    <span class="n">_eventDispatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">EventDispatcher</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 定义事件director_after_draw，director 在draw之后触发</span>
+</span><span class='line'>    <span class="n">_eventAfterDraw</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">EventCustom</span><span class="p">(</span><span class="n">EVENT_AFTER_DRAW</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">_eventAfterDraw</span><span class="o">-&gt;</span><span class="n">setUserData</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 定义事件director_after_visit</span>
+</span><span class='line'>    <span class="n">_eventAfterVisit</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">EventCustom</span><span class="p">(</span><span class="n">EVENT_AFTER_VISIT</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">_eventAfterVisit</span><span class="o">-&gt;</span><span class="n">setUserData</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 定义事件director_after_update</span>
+</span><span class='line'>    <span class="n">_eventAfterUpdate</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">EventCustom</span><span class="p">(</span><span class="n">EVENT_AFTER_UPDATE</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">_eventAfterUpdate</span><span class="o">-&gt;</span><span class="n">setUserData</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 定义事件director_projection_changed</span>
+</span><span class='line'>    <span class="n">_eventProjectionChanged</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">EventCustom</span><span class="p">(</span><span class="n">EVENT_PROJECTION_CHANGED</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">_eventProjectionChanged</span><span class="o">-&gt;</span><span class="n">setUserData</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 初始化纹理缓存 _textureCache</span>
+</span><span class='line'>    <span class="n">initTextureCache</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 初始化矩阵堆栈，包括 模型视图_modelViewMatrixStack，投影矩阵_projectionMatrixStack，纹理矩阵_textureMatrixStack</span>
+</span><span class='line'>    <span class="n">initMatrixStack</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 渲染器</span>
+</span><span class='line'>    <span class="n">_renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Renderer</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 控制台</span>
+</span><span class='line'>    <span class="n">_console</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Console</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>获取openGL包装器GLView</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCGLViewImpl-desktop.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GLViewImpl</span><span class="o">*</span> <span class="n">GLViewImpl</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">viewName</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">auto</span> <span class="n">ret</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">GLViewImpl</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">&amp;&amp;</span> <span class="n">ret</span><span class="o">-&gt;</span><span class="n">initWithRect</span><span class="p">(</span><span class="n">viewName</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">960</span><span class="p">,</span> <span class="mi">640</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">ret</span><span class="o">-&gt;</span><span class="n">autorelease</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">bool</span> <span class="n">GLViewImpl</span><span class="o">::</span><span class="n">initWithRect</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">viewName</span><span class="p">,</span> <span class="n">Rect</span> <span class="n">rect</span><span class="p">,</span> <span class="kt">float</span> <span class="n">frameZoomFactor</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">setViewName</span><span class="p">(</span><span class="n">viewName</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_frameZoomFactor</span> <span class="o">=</span> <span class="n">frameZoomFactor</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 使用之前设置的_glContextAttrs设置glfw</span>
+</span><span class='line'>    <span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_RESIZABLE</span><span class="p">,</span><span class="n">GL_FALSE</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_RED_BITS</span><span class="p">,</span><span class="n">_glContextAttrs</span><span class="p">.</span><span class="n">redBits</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_GREEN_BITS</span><span class="p">,</span><span class="n">_glContextAttrs</span><span class="p">.</span><span class="n">greenBits</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_BLUE_BITS</span><span class="p">,</span><span class="n">_glContextAttrs</span><span class="p">.</span><span class="n">blueBits</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_ALPHA_BITS</span><span class="p">,</span><span class="n">_glContextAttrs</span><span class="p">.</span><span class="n">alphaBits</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_DEPTH_BITS</span><span class="p">,</span><span class="n">_glContextAttrs</span><span class="p">.</span><span class="n">depthBits</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_STENCIL_BITS</span><span class="p">,</span><span class="n">_glContextAttrs</span><span class="p">.</span><span class="n">stencilBits</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 创建窗口</span>
+</span><span class='line'>    <span class="n">_mainWindow</span> <span class="o">=</span> <span class="n">glfwCreateWindow</span><span class="p">(</span><span class="n">rect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">_frameZoomFactor</span><span class="p">,</span>
+</span><span class='line'>                                   <span class="n">rect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">_frameZoomFactor</span><span class="p">,</span>
+</span><span class='line'>                                   <span class="n">_viewName</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span>
+</span><span class='line'>                                   <span class="n">_monitor</span><span class="p">,</span>
+</span><span class='line'>                                   <span class="k">nullptr</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwMakeContextCurrent</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 设置事件绑定</span>
+</span><span class='line'>    <span class="n">glfwSetMouseButtonCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>     <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWMouseCallBack</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetCursorPosCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>       <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWMouseMoveCallBack</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetScrollCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>          <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWMouseScrollCallback</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetCharCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>            <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWCharCallback</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetKeyCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>             <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWKeyCallback</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetWindowPosCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>       <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWWindowPosCallback</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetFramebufferSizeCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span> <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWframebuffersize</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetWindowSizeCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>      <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWWindowSizeFunCallback</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">glfwSetWindowIconifyCallback</span><span class="p">(</span><span class="n">_mainWindow</span><span class="p">,</span>   <span class="n">GLFWEventHandler</span><span class="o">::</span><span class="n">onGLFWWindowIconifyCallback</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">setFrameSize</span><span class="p">(</span><span class="n">rect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">rect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// check OpenGL version at first</span>
+</span><span class='line'>    <span class="k">const</span> <span class="n">GLubyte</span><span class="o">*</span> <span class="n">glVersion</span> <span class="o">=</span> <span class="n">glGetString</span><span class="p">(</span><span class="n">GL_VERSION</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span> <span class="n">utils</span><span class="o">::</span><span class="n">atof</span><span class="p">((</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">glVersion</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1.5</span> <span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="kt">char</span> <span class="n">strComplain</span><span class="p">[</span><span class="mi">256</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>        <span class="n">sprintf</span><span class="p">(</span><span class="n">strComplain</span><span class="p">,</span>
+</span><span class='line'>                <span class="s">&quot;OpenGL 1.5 or higher is required (your version is %s). Please upgrade the driver of your video card.&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="n">glVersion</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">MessageBox</span><span class="p">(</span><span class="n">strComplain</span><span class="p">,</span> <span class="s">&quot;OpenGL version too old&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">initGlew</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Enable point size by default.</span>
+</span><span class='line'>    <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_VERTEX_PROGRAM_POINT_SIZE</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>鼠标，键盘等事件是通过glfw从系统获取并回调绑定的方法的</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCGLViewImpl-desktop.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// 其中view就是CCGLViewImpl对象</span>
+</span><span class='line'><span class="k">static</span> <span class="kt">void</span> <span class="nf">onGLFWMouseCallBack</span><span class="p">(</span><span class="n">GLFWwindow</span><span class="o">*</span> <span class="n">window</span><span class="p">,</span> <span class="kt">int</span> <span class="n">button</span><span class="p">,</span> <span class="kt">int</span> <span class="n">action</span><span class="p">,</span> <span class="kt">int</span> <span class="n">modify</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_view</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">_view</span><span class="o">-&gt;</span><span class="n">onGLFWMouseCallBack</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">modify</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="n">GLViewImpl</span><span class="o">::</span><span class="n">onGLFWMouseCallBack</span><span class="p">(</span><span class="n">GLFWwindow</span><span class="o">*</span> <span class="n">window</span><span class="p">,</span> <span class="kt">int</span> <span class="n">button</span><span class="p">,</span> <span class="kt">int</span> <span class="n">action</span><span class="p">,</span> <span class="kt">int</span> <span class="n">modify</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 鼠标左键</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">GLFW_MOUSE_BUTTON_LEFT</span> <span class="o">==</span> <span class="n">button</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 点击事件</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span><span class="n">GLFW_PRESS</span> <span class="o">==</span> <span class="n">action</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">_captured</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">// 如果在窗口区域内</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getViewPortRect</span><span class="p">().</span><span class="n">equals</span><span class="p">(</span><span class="n">Rect</span><span class="o">::</span><span class="n">ZERO</span><span class="p">)</span> <span class="o">||</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getViewPortRect</span><span class="p">().</span><span class="n">containsPoint</span><span class="p">(</span><span class="n">Vec2</span><span class="p">(</span><span class="n">_mouseX</span><span class="p">,</span><span class="n">_mouseY</span><span class="p">)))</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="kt">intptr_t</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="c1">// 点击开始</span>
+</span><span class='line'>                <span class="k">this</span><span class="o">-&gt;</span><span class="n">handleTouchesBegin</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">_mouseX</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">_mouseY</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="c1">// 鼠标放开事件</span>
+</span><span class='line'>        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">GLFW_RELEASE</span> <span class="o">==</span> <span class="n">action</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">_captured</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">_captured</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>                <span class="kt">intptr_t</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>                <span class="k">this</span><span class="o">-&gt;</span><span class="n">handleTouchesEnd</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">_mouseX</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">_mouseY</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 转换坐标，glfw的鼠标坐标转换到屏幕坐标</span>
+</span><span class='line'>    <span class="kt">float</span> <span class="n">cursorX</span> <span class="o">=</span> <span class="p">(</span><span class="n">_mouseX</span> <span class="o">-</span> <span class="n">_viewPortRect</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">_scaleX</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">float</span> <span class="n">cursorY</span> <span class="o">=</span> <span class="p">(</span><span class="n">_viewPortRect</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">_viewPortRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">_mouseY</span><span class="p">)</span> <span class="o">/</span> <span class="n">_scaleY</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">GLFW_PRESS</span> <span class="o">==</span> <span class="n">action</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 新建事件</span>
+</span><span class='line'>        <span class="n">EventMouse</span> <span class="n">event</span><span class="p">(</span><span class="n">EventMouse</span><span class="o">::</span><span class="n">MouseEventType</span><span class="o">::</span><span class="n">MOUSE_DOWN</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">event</span><span class="p">.</span><span class="n">setCursorPosition</span><span class="p">(</span><span class="n">cursorX</span><span class="p">,</span> <span class="n">cursorY</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">event</span><span class="p">.</span><span class="n">setMouseButton</span><span class="p">(</span><span class="n">button</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 获取director中事件调度器，触发该事件</span>
+</span><span class='line'>        <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getEventDispatcher</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">dispatchEvent</span><span class="p">(</span><span class="o">&amp;</span><span class="n">event</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">GLFW_RELEASE</span> <span class="o">==</span> <span class="n">action</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 新建事件</span>
+</span><span class='line'>        <span class="n">EventMouse</span> <span class="n">event</span><span class="p">(</span><span class="n">EventMouse</span><span class="o">::</span><span class="n">MouseEventType</span><span class="o">::</span><span class="n">MOUSE_UP</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">event</span><span class="p">.</span><span class="n">setCursorPosition</span><span class="p">(</span><span class="n">cursorX</span><span class="p">,</span> <span class="n">cursorY</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">event</span><span class="p">.</span><span class="n">setMouseButton</span><span class="p">(</span><span class="n">button</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 获取director中事件调度器，触发该事件</span>
+</span><span class='line'>        <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getEventDispatcher</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">dispatchEvent</span><span class="p">(</span><span class="o">&amp;</span><span class="n">event</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>创建 用户自定义场景，将场景设置为<em>nextScene， 在后面的主循环中替换为</em>runningScene并开始渲染</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCDirector.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">Director</span><span class="o">::</span><span class="n">runWithScene</span><span class="p">(</span><span class="n">Scene</span> <span class="o">*</span><span class="n">scene</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">CCASSERT</span><span class="p">(</span><span class="n">scene</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="s">&quot;This command can only be used to start the Director. There is already a scene present.&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">CCASSERT</span><span class="p">(</span><span class="n">_runningScene</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">,</span> <span class="s">&quot;_runningScene should be null&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">pushScene</span><span class="p">(</span><span class="n">scene</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">startAnimation</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="n">Director</span><span class="o">::</span><span class="n">pushScene</span><span class="p">(</span><span class="n">Scene</span> <span class="o">*</span><span class="n">scene</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">CCASSERT</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="s">&quot;the scene should not null&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_sendCleanupToScene</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_scenesStack</span><span class="p">.</span><span class="n">pushBack</span><span class="p">(</span><span class="n">scene</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">_nextScene</span> <span class="o">=</span> <span class="n">scene</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="n">DisplayLinkDirector</span><span class="o">::</span><span class="n">startAnimation</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">gettimeofday</span><span class="p">(</span><span class="n">_lastUpdate</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">CCLOG</span><span class="p">(</span><span class="s">&quot;cocos2d: DisplayLinkDirector: Error on gettimeofday&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_invalid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">setNextDeltaTimeZero</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="n">Director</span><span class="o">::</span><span class="n">setNextDeltaTimeZero</span><span class="p">(</span><span class="kt">bool</span> <span class="n">nextDeltaTimeZero</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">_nextDeltaTimeZero</span> <span class="o">=</span> <span class="n">nextDeltaTimeZero</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>初始化部分完成，进入游戏主循环</h3>
+
+<figure class='code'><figcaption><span>CCApplication-mac.mm </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">Application</span><span class="o">::</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="p">....</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 游戏主循环，直到接受glview的关闭窗口命令</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">glview</span><span class="o">-&gt;</span><span class="n">windowShouldClose</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">getCurrentMillSecond</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 主循环</span>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">mainLoop</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 每次循环中触发glfw的事件，如果有事件发生那么就会调用上面绑定的监听函数</span>
+</span><span class='line'>        <span class="n">glview</span><span class="o">-&gt;</span><span class="n">pollEvents</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">curTime</span> <span class="o">=</span> <span class="n">getCurrentMillSecond</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 如果持续事件小于上面设置的1/60秒，那么休眠对应的时间，保证主循环在1/60秒调用第一次</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">curTime</span> <span class="o">-</span> <span class="n">lastTime</span> <span class="o">&lt;</span> <span class="n">_animationInterval</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">usleep</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">useconds_t</span><span class="o">&gt;</span><span class="p">((</span><span class="n">_animationInterval</span> <span class="o">-</span> <span class="n">curTime</span> <span class="o">+</span> <span class="n">lastTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">));</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">....</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mainloop</h3>
+
+<figure class='code'><figcaption><span>CCDirector.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">DisplayLinkDirector</span><span class="o">::</span><span class="n">mainLoop</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 如果需要清理导演，那么清理导演</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_purgeDirectorInNextLoop</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_purgeDirectorInNextLoop</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">purgeDirector</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">// 如果需要重启导演，那么重启导演</span>
+</span><span class='line'>    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">_restartDirectorInNextLoop</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_restartDirectorInNextLoop</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">restartDirector</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">_invalid</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// openGL 渲染</span>
+</span><span class='line'>        <span class="n">drawScene</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 释放需要释放的对象</span>
+</span><span class='line'>        <span class="n">PoolManager</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getCurrentPool</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>drawScene</h3>
+
+<figure class='code'><figcaption><span>CCDirector.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">Director</span><span class="o">::</span><span class="n">drawScene</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 计算持续事件</span>
+</span><span class='line'>    <span class="n">calculateDeltaTime</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 触发glfw的事件</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_openGLView</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_openGLView</span><span class="o">-&gt;</span><span class="n">pollEvents</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 如果不暂停执行</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">_paused</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 定时器，主要用来调用动画，之前在导演初始化绑定了ActionManager的update方法</span>
+</span><span class='line'>        <span class="n">_scheduler</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="n">_deltaTime</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 触发事件director_after_update，该事件是初始化导演时候定义的</span>
+</span><span class='line'>        <span class="n">_eventDispatcher</span><span class="o">-&gt;</span><span class="n">dispatchEvent</span><span class="p">(</span><span class="n">_eventAfterUpdate</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_renderer</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_nextScene</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 将_nextScene设置为__runningScene，还有会调用所有当前scene下面孩子中用户注册的onEnter方法</span>
+</span><span class='line'>        <span class="n">setNextScene</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">pushMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_MODELVIEW</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_runningScene</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'><span class="cp">#if CC_USE_PHYSICS</span>
+</span><span class='line'>        <span class="k">auto</span> <span class="n">physicsWorld</span> <span class="o">=</span> <span class="n">_runningScene</span><span class="o">-&gt;</span><span class="n">getPhysicsWorld</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">physicsWorld</span> <span class="o">&amp;&amp;</span> <span class="n">physicsWorld</span><span class="o">-&gt;</span><span class="n">isAutoStep</span><span class="p">())</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">physicsWorld</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="n">_deltaTime</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'>        <span class="c1">//clear draw stats</span>
+</span><span class='line'>        <span class="n">_renderer</span><span class="o">-&gt;</span><span class="n">clearDrawStats</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 将scene下面所有孩子的渲染参数输出到openGL中，通过便利孩子节点的visit方法，visit方法会调用自身的draw方法</span>
+</span><span class='line'>        <span class="n">_runningScene</span><span class="o">-&gt;</span><span class="n">render</span><span class="p">(</span><span class="n">_renderer</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">_eventDispatcher</span><span class="o">-&gt;</span><span class="n">dispatchEvent</span><span class="p">(</span><span class="n">_eventAfterVisit</span><span class="p">);</span>
+</span><span class='line'><span class="cp">#if CC_USE_PHYSICS</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span><span class="n">physicsWorld</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">physicsWorld</span><span class="o">-&gt;</span><span class="n">_updateBodyTransform</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// draw the notifications node</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_notificationNode</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_notificationNode</span><span class="o">-&gt;</span><span class="n">visit</span><span class="p">(</span><span class="n">_renderer</span><span class="p">,</span> <span class="n">Mat4</span><span class="o">::</span><span class="n">IDENTITY</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_displayStats</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">showStats</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">_renderer</span><span class="o">-&gt;</span><span class="n">render</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_eventDispatcher</span><span class="o">-&gt;</span><span class="n">dispatchEvent</span><span class="p">(</span><span class="n">_eventAfterDraw</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">popMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_MODELVIEW</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_totalFrames</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 刷新openGL数据，将图像显示到屏幕</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_openGLView</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_openGLView</span><span class="o">-&gt;</span><span class="n">swapBuffers</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_displayStats</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">calculateMPF</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>动画解析</h3>
+
+<ul>
+<li><em>scheduler::update 会调用 </em>actionManger::update方法</li>
+<li>下面的callback就是在导演中注册的_actionManger::update方法</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCScheduler.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">cheduler</span><span class="o">::</span><span class="n">update</span><span class="p">(</span><span class="kt">float</span> <span class="n">dt</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="p">....</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">DL_FOREACH_SAFE</span><span class="p">(</span><span class="n">_updatesNegList</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">((</span><span class="o">!</span> <span class="n">entry</span><span class="o">-&gt;</span><span class="n">paused</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span> <span class="n">entry</span><span class="o">-&gt;</span><span class="n">markedForDeletion</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">entry</span><span class="o">-&gt;</span><span class="n">callback</span><span class="p">(</span><span class="n">dt</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>ActionManager会遍历所有注册的Node对象的action对象</li>
+<li>调用action的step方法</li>
+<li>父类中的step方法会调用具体子类对象的update方法</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCActionManager.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">ActionManager</span><span class="o">::</span><span class="n">update</span><span class="p">(</span><span class="kt">float</span> <span class="n">dt</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 遍历所有注册的Node对象</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">tHashElement</span> <span class="o">*</span><span class="n">elt</span> <span class="o">=</span> <span class="n">_targets</span><span class="p">;</span> <span class="n">elt</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">;</span> <span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_currentTarget</span>          <span class="o">=</span> <span class="n">elt</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">_currentTargetSalvaged</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">paused</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="c1">// 遍历Node对象中注册的所有action对象</span>
+</span><span class='line'>            <span class="k">for</span> <span class="p">(</span><span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">actionIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">actionIndex</span> <span class="o">&lt;</span> <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">actions</span><span class="o">-&gt;</span><span class="n">num</span><span class="p">;</span><span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">actionIndex</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span> <span class="o">=</span> <span class="p">(</span><span class="n">Action</span><span class="o">*</span><span class="p">)</span><span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">actions</span><span class="o">-&gt;</span><span class="n">arr</span><span class="p">[</span><span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">actionIndex</span><span class="p">];</span>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="k">continue</span><span class="p">;</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentActionSalvaged</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="c1">// 调用每个action对象的step方法</span>
+</span><span class='line'>                <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span><span class="o">-&gt;</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentActionSalvaged</span><span class="p">)</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="c1">// The currentAction told the node to remove it. To prevent the action from</span>
+</span><span class='line'>                    <span class="c1">// accidentally deallocating itself before finishing its step, we retained</span>
+</span><span class='line'>                    <span class="c1">// it. Now that step is done, it&#39;s safe to release it.</span>
+</span><span class='line'>                    <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">();</span>
+</span><span class='line'>                <span class="p">}</span> <span class="k">else</span>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span><span class="o">-&gt;</span><span class="n">isDone</span><span class="p">())</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span><span class="o">-&gt;</span><span class="n">stop</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>                    <span class="n">Action</span> <span class="o">*</span><span class="n">action</span> <span class="o">=</span> <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span><span class="p">;</span>
+</span><span class='line'>                    <span class="c1">// Make currentAction nil to prevent removeAction from salvaging it.</span>
+</span><span class='line'>                    <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>                    <span class="n">removeAction</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">currentAction</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// elt, at this moment, is still valid</span>
+</span><span class='line'>        <span class="c1">// so it is safe to ask this here (issue #490)</span>
+</span><span class='line'>        <span class="n">elt</span> <span class="o">=</span> <span class="p">(</span><span class="n">tHashElement</span><span class="o">*</span><span class="p">)(</span><span class="n">elt</span><span class="o">-&gt;</span><span class="n">hh</span><span class="p">.</span><span class="n">next</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// only delete currentTarget if no actions were scheduled during the cycle (issue #481)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">_currentTargetSalvaged</span> <span class="o">&amp;&amp;</span> <span class="n">_currentTarget</span><span class="o">-&gt;</span><span class="n">actions</span><span class="o">-&gt;</span><span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">deleteHashElement</span><span class="p">(</span><span class="n">_currentTarget</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// issue #635</span>
+</span><span class='line'>    <span class="n">_currentTarget</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span>CCActionInstant.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">ActionInstant</span><span class="o">::</span><span class="n">step</span><span class="p">(</span><span class="kt">float</span> <span class="n">dt</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">CC_UNUSED_PARAM</span><span class="p">(</span><span class="n">dt</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span>CCActionInterval.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">ActionInterval</span><span class="o">::</span><span class="n">step</span><span class="p">(</span><span class="kt">float</span> <span class="n">dt</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_firstTick</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_firstTick</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">_elapsed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_elapsed</span> <span class="o">+=</span> <span class="n">dt</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">this</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="n">MAX</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span>                                  <span class="c1">// needed for rewind. elapsed could be negative</span>
+</span><span class='line'>                      <span class="n">MIN</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">_elapsed</span> <span class="o">/</span>
+</span><span class='line'>                          <span class="n">MAX</span><span class="p">(</span><span class="n">_duration</span><span class="p">,</span> <span class="n">FLT_EPSILON</span><span class="p">)</span>   <span class="c1">// division by 0</span>
+</span><span class='line'>                          <span class="p">)</span>
+</span><span class='line'>                      <span class="p">)</span>
+</span><span class='line'>                 <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>MoveBy 对象</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCActionInterval.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">MoveBy</span><span class="o">::</span><span class="n">update</span><span class="p">(</span><span class="kt">float</span> <span class="n">t</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_target</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'><span class="cp">#if CC_ENABLE_STACKABLE_ACTIONS</span>
+</span><span class='line'>        <span class="n">Vec3</span> <span class="n">currentPos</span> <span class="o">=</span> <span class="n">_target</span><span class="o">-&gt;</span><span class="n">getPosition3D</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">Vec3</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">currentPos</span> <span class="o">-</span> <span class="n">_previousPosition</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">_startPosition</span> <span class="o">=</span> <span class="n">_startPosition</span> <span class="o">+</span> <span class="n">diff</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">Vec3</span> <span class="n">newPos</span> <span class="o">=</span>  <span class="n">_startPosition</span> <span class="o">+</span> <span class="p">(</span><span class="n">_positionDelta</span> <span class="o">*</span> <span class="n">t</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">_target</span><span class="o">-&gt;</span><span class="n">setPosition3D</span><span class="p">(</span><span class="n">newPos</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">_previousPosition</span> <span class="o">=</span> <span class="n">newPos</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#else</span>
+</span><span class='line'>        <span class="n">_target</span><span class="o">-&gt;</span><span class="n">setPosition3D</span><span class="p">(</span><span class="n">_startPosition</span> <span class="o">+</span> <span class="n">_positionDelta</span> <span class="o">*</span> <span class="n">t</span><span class="p">);</span>
+</span><span class='line'><span class="cp">#endif </span><span class="c1">// CC_ENABLE_STACKABLE_ACTIONS</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>渲染解析</h3>
+
+<ul>
+<li>主循环会调用当前运行中的 场景 的render方法</li>
+<li>scene 中的render方法会调用自身的visit方法</li>
+<li>visit方法会遍历自身孩子，调用孩子的visit方法</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCScene</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">Scene</span><span class="o">::</span><span class="n">render</span><span class="p">(</span><span class="n">Renderer</span><span class="o">*</span> <span class="n">renderer</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">auto</span> <span class="n">director</span> <span class="o">=</span> <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">();</span>
+</span><span class='line'>    <span class="n">Camera</span><span class="o">*</span> <span class="n">defaultCamera</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">getNodeToParentTransform</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">camera</span> <span class="p">:</span> <span class="n">_cameras</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">camera</span><span class="o">-&gt;</span><span class="n">isVisible</span><span class="p">())</span>
+</span><span class='line'>            <span class="k">continue</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Camera</span><span class="o">::</span><span class="n">_visitingCamera</span> <span class="o">=</span> <span class="n">camera</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">Camera</span><span class="o">::</span><span class="n">_visitingCamera</span><span class="o">-&gt;</span><span class="n">getCameraFlag</span><span class="p">()</span> <span class="o">==</span> <span class="n">CameraFlag</span><span class="o">::</span><span class="n">DEFAULT</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">defaultCamera</span> <span class="o">=</span> <span class="n">Camera</span><span class="o">::</span><span class="n">_visitingCamera</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">continue</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">pushMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_PROJECTION</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">loadMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_PROJECTION</span><span class="p">,</span> <span class="n">Camera</span><span class="o">::</span><span class="n">_visitingCamera</span><span class="o">-&gt;</span><span class="n">getViewProjectionMatrix</span><span class="p">());</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">//visit the scene</span>
+</span><span class='line'>        <span class="n">visit</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">renderer</span><span class="o">-&gt;</span><span class="n">render</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">popMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_PROJECTION</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">//draw with default camera</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">defaultCamera</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">Camera</span><span class="o">::</span><span class="n">_visitingCamera</span> <span class="o">=</span> <span class="n">defaultCamera</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">pushMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_PROJECTION</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">loadMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_PROJECTION</span><span class="p">,</span> <span class="n">Camera</span><span class="o">::</span><span class="n">_visitingCamera</span><span class="o">-&gt;</span><span class="n">getViewProjectionMatrix</span><span class="p">());</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">//visit the scene</span>
+</span><span class='line'>        <span class="n">visit</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">renderer</span><span class="o">-&gt;</span><span class="n">render</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">director</span><span class="o">-&gt;</span><span class="n">popMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_PROJECTION</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">Camera</span><span class="o">::</span><span class="n">_visitingCamera</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>每个Node对象都会遍历自身的孩子对象，并调用draw方法</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCNode.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">Node</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">Renderer</span><span class="o">*</span> <span class="n">renderer</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat4</span> <span class="o">&amp;</span><span class="n">parentTransform</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">parentFlags</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// quick return if not visible. children won&#39;t be drawn.</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_visible</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">uint32_t</span> <span class="n">flags</span> <span class="o">=</span> <span class="n">processParentFlags</span><span class="p">(</span><span class="n">parentTransform</span><span class="p">,</span> <span class="n">parentFlags</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// IMPORTANT:</span>
+</span><span class='line'>    <span class="c1">// To ease the migration to v3.0, we still support the Mat4 stack,</span>
+</span><span class='line'>    <span class="c1">// but it is deprecated and your code should not rely on it</span>
+</span><span class='line'>    <span class="n">_director</span><span class="o">-&gt;</span><span class="n">pushMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_MODELVIEW</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">_director</span><span class="o">-&gt;</span><span class="n">loadMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_MODELVIEW</span><span class="p">,</span> <span class="n">_modelViewTransform</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">bool</span> <span class="n">visibleByCamera</span> <span class="o">=</span> <span class="n">isVisitableByVisitingCamera</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">_children</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">sortAllChildren</span><span class="p">();</span>
+</span><span class='line'>        <span class="c1">// draw children zOrder &lt; 0</span>
+</span><span class='line'>        <span class="k">for</span><span class="p">(</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_children</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">auto</span> <span class="n">node</span> <span class="o">=</span> <span class="n">_children</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">node</span> <span class="o">&amp;&amp;</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">_localZOrder</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>                <span class="n">node</span><span class="o">-&gt;</span><span class="n">visit</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">_modelViewTransform</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+</span><span class='line'>            <span class="k">else</span>
+</span><span class='line'>                <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="c1">// self draw</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">visibleByCamera</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">-&gt;</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">_modelViewTransform</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">it</span><span class="o">=</span><span class="n">_children</span><span class="p">.</span><span class="n">cbegin</span><span class="p">()</span><span class="o">+</span><span class="n">i</span><span class="p">;</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">_children</span><span class="p">.</span><span class="n">cend</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">visit</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">_modelViewTransform</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">visibleByCamera</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">-&gt;</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">_modelViewTransform</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">_director</span><span class="o">-&gt;</span><span class="n">popMatrix</span><span class="p">(</span><span class="n">MATRIX_STACK_TYPE</span><span class="o">::</span><span class="n">MATRIX_STACK_MODELVIEW</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// FIX ME: Why need to set _orderOfArrival to 0??</span>
+</span><span class='line'>    <span class="c1">// Please refer to https://github.com/cocos2d/cocos2d-x/pull/6920</span>
+</span><span class='line'>    <span class="c1">// reset for next frame</span>
+</span><span class='line'>    <span class="c1">// _orderOfArrival = 0;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>主循环解析完毕，进入事件循环</h3>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Shell语法总结]]></title>
