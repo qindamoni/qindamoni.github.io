@@ -4,7 +4,7 @@
   <title><![CDATA[Qindamoni]]></title>
   <link href="http://qindamoni.com/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2015-04-02T11:45:05+08:00</updated>
+  <updated>2015-04-03T01:21:05+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -12,6 +12,2061 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[C++备忘]]></title>
+    <link href="http://qindamoni.com/blog/2015/04/02/c-plus-plus-bei-wang/"/>
+    <updated>2015-04-02T18:15:36+08:00</updated>
+    <id>http://qindamoni.com/blog/2015/04/02/c-plus-plus-bei-wang</id>
+    <content type="html"><![CDATA[<ul>
+<li>指针定义之后必须初始化，而且必须使用同类型变量的地址初始化（即不能使用字面值常量初始化）
+
+<ul>
+<li>定义之后未初始化的指针内容不确定</li>
+</ul>
+</li>
+<li>指针内存结构</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">value</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">point</span>  <span class="o">=</span> <span class="o">&amp;</span><span class="kt">int</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">value</span>   <span class="mh">0x00000001</span>      <span class="mi">1</span>
+</span><span class='line'>        <span class="p">....</span>
+</span><span class='line'>        <span class="p">....</span>
+</span><span class='line'><span class="n">point</span>   <span class="mh">0x00001001</span>      <span class="mh">0x00000001</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<ul>
+<li>两种方式访问内存数据
+
+<ul>
+<li>变量名称</li>
+<li>变量内存地址，即指针</li>
+</ul>
+</li>
+<li>基本数据类型访问</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">value</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">point</span>  <span class="o">=</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 访问</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="n">value</span><span class="p">);</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="o">*</span><span class="n">point</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>结构体数据类型访问</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">struct</span> <span class="n">Human</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Human</span> <span class="n">man</span><span class="p">;</span>
+</span><span class='line'><span class="n">man</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Human</span><span class="o">*</span> <span class="n">pMan</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">man</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 访问</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="n">man</span><span class="p">.</span><span class="n">age</span><span class="p">);</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="n">pMan</span><span class="o">-&gt;</span><span class="n">age</span><span class="p">);</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,(</span><span class="o">*</span><span class="n">pMan</span><span class="p">).</span><span class="n">age</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>两种常量表达式
+
+<ul>
+<li><code>#define MAX 1000</code>
+
+<ul>
+<li>编译阶段就会替换</li>
+</ul>
+</li>
+<li><code>const int MAX 1000</code>
+
+<ul>
+<li>调试阶段可以跟踪</li>
+</ul>
+</li>
+<li>程序中尽量不要使用 字面值 常量，而替换成上面种的有意义的常量</li>
+</ul>
+</li>
+<li>三元运算符
+
+<ul>
+<li><code>c = ( a &lt; b ) ? a : b</code></li>
+</ul>
+</li>
+<li>复合赋值符
+
+<ul>
+<li><code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>&lt;&lt;=</code> <code>&gt;&gt;=</code> <code>&amp;=</code> <code>^=</code> <code>|=</code></li>
+</ul>
+</li>
+<li>相等 <code>==</code> 不要进行浮点数比较</li>
+<li>逻辑运算符
+
+<ul>
+<li><code>&amp;&amp;</code> <code>!</code> <code>||</code></li>
+</ul>
+</li>
+<li>switch 语句</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">switch</span><span class="p">(</span><span class="err">只能是整型，或能转换成整型的其他类型</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">case</span> <span class="err">只能是常量，或常量表达式，不能有任何变量</span><span class="o">:</span>
+</span><span class='line'>        <span class="p">...</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">default</span><span class="o">:</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>函数声明</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="err">返回类型</span> <span class="err">函数名称</span><span class="p">(</span><span class="err">形参列表</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>函数定义</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="err">返回类型</span> <span class="err">函数名称</span><span class="p">(</span><span class="err">形参列表</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="err">函数体</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>调用一个函数之前必须声明该函数</li>
+<li>函数调用，形参赋值
+
+<ul>
+<li>传值，传地址，传引用
+
+<ul>
+<li>不管传什么，函数调用时候刑参都是在内存栈中新创建的变量，有自己的内存空间（即内存地址）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">2015</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sum</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">param</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="n">param</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 内存结构</span>
+</span><span class='line'><span class="n">num</span>     <span class="mh">0x0001</span>  <span class="mi">2015</span>
+</span><span class='line'>        <span class="p">....</span>
+</span><span class='line'>        <span class="p">....</span>
+</span><span class='line'><span class="n">param</span>   <span class="mh">0x0010</span>  <span class="mi">2015</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">num</span>     <span class="o">=</span> <span class="mi">2015</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">pNum</span>   <span class="o">=</span> <span class="o">&amp;</span><span class="n">num</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sum</span><span class="p">(</span><span class="n">pNum</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">param</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%p&quot;</span><span class="p">,</span><span class="n">param</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 内存结构</span>
+</span><span class='line'><span class="n">num</span>     <span class="mh">0x0001</span>  <span class="mi">2015</span>
+</span><span class='line'><span class="n">pNum</span>    <span class="mh">0x0004</span>  <span class="mh">0x0001</span>
+</span><span class='line'>        <span class="p">...</span>
+</span><span class='line'>        <span class="p">...</span>
+</span><span class='line'><span class="n">param</span>   <span class="mh">0x0010</span>  <span class="mh">0x0001</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>函数内部的变量在开始调用函数时候进行内存分配，调用结束之后会全部释放。
+
+<ul>
+<li>只有函数内部使用new申请堆内存创建对象不会释放，需要用户手动释放</li>
+<li>return 通过传值将数据传出去</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span><span class="kt">int</span> <span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">x</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 内存结构</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 开始调用</span>
+</span><span class='line'><span class="n">x</span>   <span class="mh">0x0001</span>  <span class="mi">0</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'><span class="n">a</span>   <span class="mh">0x0004</span>  <span class="mi">1</span>
+</span><span class='line'><span class="n">b</span>   <span class="mh">0x0008</span>  <span class="mi">2</span>
+</span><span class='line'><span class="n">c</span>   <span class="mh">0x000b</span>  <span class="mi">3</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 调用结束</span>
+</span><span class='line'><span class="n">x</span>   <span class="mh">0x0001</span>  <span class="mi">3</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>    <span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>函数调用表达式可以用在任何该返回值类型对应的地方</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">if</span><span class="p">(</span> <span class="n">isFinished</span><span class="p">()</span> <span class="o">==</span> <span class="nb">true</span> <span class="p">){</span>
+</span><span class='line'>    <span class="c1">// ....</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>内连函数，编译阶段直接在调用的位置替换为函数定义的代码</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="kt">void</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span><span class="kt">int</span> <span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 编译后</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>函数重载</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span><span class="kt">int</span> <span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">float</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">float</span> <span class="n">a</span><span class="p">,</span><span class="kt">float</span> <span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sum</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>类声明</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="err">类名: </span><span class="nc">public</span> <span class="err">基类名</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="c1">// 公有</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>    <span class="c1">// 保护</span>
+</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'>    <span class="c1">// 私有</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>类定义，其实就是定义类的成员函数</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="n">say</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 定义</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">Hello</span><span class="o">::</span><span class="n">say</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>声明对象</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="nf">say</span><span class="p">();</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="c1">// 声明对象</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">hello</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 声明对象指针</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="o">*</span> <span class="n">pHello</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 申请内存创建（堆）</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="o">*</span> <span class="n">nHello</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>使用对象
+
+<ul>
+<li>如果对象是指针使用 <code>-&gt;</code></li>
+<li>如果对象是值使用 <code>.</code></li>
+<li>这两个操作跟具体类没有任何关系，类也没有这两种用法</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">hello</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">hello</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 1,声明的是对象指针，使用其他同类型的对象地址初始化</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="o">*</span> <span class="n">pHello</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">hello</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">pHello</span><span class="o">-&gt;</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 2,声明的是对象指针，使用new申请地址进行初始化</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="o">*</span> <span class="n">pHello2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="p">();</span>
+</span><span class='line'>    <span class="n">pHello2</span><span class="o">-&gt;</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 指针转换成具体值使用</span>
+</span><span class='line'>    <span class="p">(</span><span class="o">*</span><span class="n">pHello</span><span class="p">).</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">(</span><span class="o">*</span><span class="n">pHello2</span><span class="p">).</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>直接声明的对象的内存由系统控制</li>
+<li>new出来的对象的内存需要用户自己控制，所以使用完之后要delete</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Hello</span><span class="o">*</span> <span class="n">pHello</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">delete</span> <span class="n">pHello</span><span class="p">;</span>
+</span><span class='line'><span class="n">pHello</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>类的构造函数，用类名定义</li>
+<li>如果没有定义构造函数，系统自动提供一个没有参数的空构造函数</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="p">(){</span>
+</span><span class='line'>        <span class="n">age</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;.</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>不能在定义类的时候初始化类成员变量，应该在构造函数中初始化成员变量</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">){</span>
+</span><span class='line'>        <span class="n">age</span> <span class="o">=</span> <span class="n">a</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 编译报warnning</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">tag</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="c1">// 声明方式1</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 声明方式2</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 声明方式3</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>初始化函数列表</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span> <span class="o">:</span> <span class="n">age</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="n">tag</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">tag</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 等同于</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">age</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">tag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">tag</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>拷贝构造函数
+
+<ul>
+<li>如果不定义，系统默认提供一个拷贝构造函数</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="err">类名</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="err">类名</span><span class="p">(</span><span class="err">类名</span> <span class="o">&amp;</span><span class="err">对象</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">Hello</span><span class="p">(</span><span class="k">const</span> <span class="n">Hello</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 使用方法，拷贝一分</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>对象操作符重载
+
+<ul>
+<li><code>a+b</code> 等价与 <code>a.operator+(b)</code></li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="err">类名</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="err">返回类型</span> <span class="n">operater</span> <span class="err">操作符</span><span class="p">(</span><span class="err">参数列表</span><span class="p">){</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Hello</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">Hello</span> <span class="n">c</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">c</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">age</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">a</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">b</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>友元函数</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">friend</span> <span class="kt">void</span> <span class="n">myFriendFunc</span><span class="p">(</span><span class="n">Hello</span> <span class="o">&amp;</span><span class="n">hello</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">tag</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">myFriendFunc</span><span class="p">(</span><span class="n">Hello</span> <span class="o">&amp;</span><span class="n">hello</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">hello</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">hello</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 编译错误</span>
+</span><span class='line'>    <span class="c1">// a.age = 1;</span>
+</span><span class='line'>    <span class="c1">// a.tag = 2;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">myFriendFunc</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>友元类</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">friend</span> <span class="k">class</span> <span class="nc">A</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">tag</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="n">set</span><span class="p">(</span><span class="n">Hello</span> <span class="o">&amp;</span><span class="n">hello</span><span class="p">){</span>
+</span><span class='line'>        <span class="n">hello</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">hello</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">Hello</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 编译错误</span>
+</span><span class='line'>    <span class="c1">// a.age = 1;</span>
+</span><span class='line'>    <span class="c1">// a.tag = 2;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">A</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">b</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>友元状态不会被子类继承</p></li>
+<li><p>类继承</p>
+
+<ul>
+<li>继承方式
+
+<ul>
+<li>public
+
+<ul>
+<li>与基类访问控制相同</li>
+</ul>
+</li>
+<li>protected
+
+<ul>
+<li>基类的public成员变成自己的protected成员</li>
+</ul>
+</li>
+<li>private
+
+<ul>
+<li>基类的public成员变成自己的private成员</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="err">类名: 继承方式 基类1,继承方式 基类2,.....</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>声明子类的对象，会自动调用父类的无参数构造方法，在调用自己的构造方法</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Parent</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">Parent</span><span class="p">(){</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;123&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Child</span><span class="o">:</span><span class="k">public</span> <span class="n">Parent</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">Child</span> <span class="n">child</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>虚函数，只有在基类里面将成员函数定义为虚函数，才能够在子类重写</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">get</span><span class="p">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">get</span><span class="p">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">age</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">b</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">b</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>类的静态成员变量
+
+<ul>
+<li>静态成员变量并不属于某个具体的对象，是属于所有程序的。</li>
+<li>使用之前必须进行初始化，而且只能在全局环境中进行初始化
+
+<ul>
+<li>不能在类内部</li>
+<li>不能函数内部</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">get</span><span class="p">(){</span>
+</span><span class='line'>        <span class="c1">// 编译错误，age 没有初始化，即还没有内存空间</span>
+</span><span class='line'>        <span class="c1">//age = 123;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 编译错误，必须在全局环境初始化</span>
+</span><span class='line'>        <span class="c1">// int A::age = 123;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">get</span><span class="p">(){</span>
+</span><span class='line'>        <span class="c1">// 编译错误，age 没有初始化，即还没有内存空间</span>
+</span><span class='line'>        <span class="c1">//age = 123;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 编译错误，必须在全局环境初始化</span>
+</span><span class='line'>        <span class="c1">// int A::age = 123;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 正确，成功获得内存地址并初始化</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">A</span><span class="o">::</span><span class="n">age</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="c1">// 编译错误，age 没有初始化，即还没有内存空间</span>
+</span><span class='line'>    <span class="c1">// A::age = 123;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 编译错误，必须在全局环境初始化</span>
+</span><span class='line'>    <span class="c1">// int A::age = 123;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>this 指针，在定义成员函数时候使用this指针代表当前对象的地址，成功定义对象之后系统将对象地址赋给this指针
+
+<ul>
+<li>如果在成员函数内部直接调用成员变量，系统会默认添加this指针</li>
+<li>类静态方法中不能使用this方法，也就是不能使用非静态的类成员变量</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Hello</span><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">get</span><span class="p">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">age</span><span class="p">;</span>
+</span><span class='line'>        <span class="c1">// 等用与</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">tag</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="nf">sGet</span><span class="p">(){</span>
+</span><span class='line'>        <span class="c1">// 编译错误</span>
+</span><span class='line'>        <span class="c1">// return age;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 等同于</span>
+</span><span class='line'>        <span class="c1">// 编译错误</span>
+</span><span class='line'>        <span class="c1">// return age;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 正确</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">tag</span><span class="p">;</span>
+</span><span class='line'>        <span class="c1">// 等同于</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Hello</span><span class="o">::</span><span class="n">tag</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">Hello</span><span class="o">::</span><span class="n">tag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>指针运算
+
+<ul>
+<li>指针加法等同于当前地址向后位移该类型长度的位置</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%p&quot;</span><span class="p">,</span><span class="n">b</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%p&quot;</span><span class="p">,</span><span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%p&quot;</span><span class="p">,</span><span class="n">b</span><span class="o">+</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>数组
+
+<ul>
+<li>数组名字就是指针，指向第一个元素的地址，使用 <code>*</code> 可以获取具体内容</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>通过指针遍历数组</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">start</span>  <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">end</span>    <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">3</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">// 等价</span>
+</span><span class='line'>    <span class="c1">// int* end    = &amp;a[3];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 开始遍历</span>
+</span><span class='line'>    <span class="k">while</span><span class="p">(</span><span class="n">start</span> <span class="o">!=</span> <span class="n">end</span><span class="p">){</span>
+</span><span class='line'>        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">start</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 移动指针位置</span>
+</span><span class='line'>        <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>void 指针
+
+<ul>
+<li>void 另一种用法是用于修饰函数返回值和无参数的函数刑参列表</li>
+<li>不同类型的类型的指针互相转换需要强行转换</li>
+<li>任何其他指针可以不经过转化就可以赋给void指针</li>
+<li>void指针赋给其他类型的指针要进行强行转换</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">pInt</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">float</span><span class="o">*</span> <span class="n">pFloat</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">void</span><span class="o">*</span> <span class="n">pVoid</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 需要强行转换</span>
+</span><span class='line'>    <span class="n">pInt</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">pFloat</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 直接赋值</span>
+</span><span class='line'>    <span class="n">pVoid</span> <span class="o">=</span> <span class="n">pInt</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">pVoid</span> <span class="o">=</span> <span class="n">pFloat</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 需要强行转换</span>
+</span><span class='line'>    <span class="n">pInt</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">pVoid</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">pFloat</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="p">)</span><span class="n">pVoid</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>新的c++强转符号 <code>static_cast</code>
+
+<ul>
+<li><code>static_cast&lt;数据类型&gt;(数据)</code></li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">pInt</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">float</span><span class="o">*</span> <span class="n">pFloat</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// C 写法</span>
+</span><span class='line'>    <span class="n">pInt</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">pFloat</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// c++ 写法</span>
+</span><span class='line'>    <span class="n">pInt</span> <span class="o">=</span> <span class="n">static_case</span><span class="o">&lt;</span><span class="kt">int</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">pFloat</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>指针的指针</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span>     <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span><span class="o">*</span>    <span class="n">b</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span><span class="o">**</span>   <span class="n">c</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 内存结构</span>
+</span><span class='line'><span class="n">a</span>   <span class="mh">0x0001</span>  <span class="mi">1</span>
+</span><span class='line'><span class="n">b</span>   <span class="mh">0x0004</span>  <span class="mh">0x0001</span>
+</span><span class='line'><span class="n">c</span>   <span class="mh">0x0008</span>  <span class="mh">0x0004</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>一般用户多维数组，数组成员也是指针的情况</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">char</span><span class="o">*</span> <span class="n">names</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;qindamoni&quot;</span><span class="p">,</span><span class="s">&quot;amuri&quot;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>指针做为函数参数</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">SumArray</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">pArray</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nArrayCount</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">nSum</span> <span class="p">){</span>
+</span><span class='line'>    <span class="o">*</span><span class="n">nSum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nArrayCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span>  <span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 将结果保存到nArraySum中，传出结果        </span>
+</span><span class='line'>        <span class="o">*</span><span class="n">nSum</span> <span class="o">+=</span> <span class="o">*</span><span class="n">pArray</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 指针加运算，访问数组中的下一个元素     </span>
+</span><span class='line'>        <span class="n">pArray</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>指针做为函数返回值
+
+<ul>
+<li>不能把一个指向局部变量的指针返回</li>
+<li>可以返回new出来的变量</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="nf">get</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">a</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">b</span>  <span class="o">=</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 错误，因为函数执行完之后会系统会释放变量a</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="nf">get</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 正确，因为new的变量的内存由用户自行控制</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>引用</p>
+
+<ul>
+<li>就是变量的别名，操作引用等同与操作该变量</li>
+<li>引用必须声明时候就初始化</li>
+<li>引用一旦定义就不能在修改</li>
+</ul>
+</li>
+<li><p>函数参数尽量使用引用</p>
+
+<ul>
+<li>传值效率低，每次拷贝的是具体的数据，如果数据大，会很慢且浪费</li>
+<li>传指针不安全</li>
+</ul>
+</li>
+<li><p>命名空间</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">namespace</span> <span class="err">空间名</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 空间内的声明和定义</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="n">Space1</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">A</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="n">Space2</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">A</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Space1</span><span class="o">::</span><span class="n">A</span> <span class="n">a1</span><span class="p">;</span>
+</span><span class='line'><span class="n">Space2</span><span class="o">::</span><span class="n">A</span> <span class="n">a2</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>一般情况下没有使用<code>::</code>表示全局命名空间，也就是匿名空间，使用空调<code>::</code>可以显示的制定匿名空间</p></li>
+<li><p>作用域</p>
+
+<ul>
+<li>局部作用域
+
+<ul>
+<li> <code>{}</code> 内部定义的变量和函数</li>
+<li>从变量定义开始到 <code>{}</code> 结束</li>
+</ul>
+</li>
+<li>全局作用域
+
+<ul>
+<li>不再任何 <code>{}</code> 里定义的变量</li>
+<li>从当前cpp文件中 定义变量开始到文件结束</li>
+</ul>
+</li>
+<li>如果要在文件A中使用文件B中定义的变量和方法
+
+<ul>
+<li>需要在A中重新使用extren声明B文件中的变量和方法
+
+<ul>
+<li>编译器就自动从其他文件（B）中寻找该变量</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>typeof</p>
+
+<ul>
+<li>定义指针变量</li>
+<li>定义函数指针</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// 错误</span>
+</span><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// 正确</span>
+</span><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="o">*</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 正确</span>
+</span><span class='line'><span class="n">typeof</span> <span class="o">*</span><span class="kt">int</span> <span class="n">PINT</span><span class="p">;</span>
+</span><span class='line'><span class="n">PINT</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 函数指针</span>
+</span><span class='line'><span class="n">typeof</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">FUNC</span><span class="p">)(</span><span class="kt">int</span><span class="p">);</span>
+</span><span class='line'><span class="n">FUNC</span> <span class="n">func1</span><span class="p">,</span><span class="n">func2</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>const</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// 整型常量，必须初始化</span>
+</span><span class='line'><span class="k">const</span> <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 对象常量</span>
+</span><span class='line'><span class="k">const</span> <span class="n">CLASS</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 整型常量指针，即*a不能变，a能变</span>
+</span><span class='line'><span class="k">const</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// 等同于</span>
+</span><span class='line'><span class="kt">int</span> <span class="k">const</span> <span class="o">*</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 常量整型指针，即*a能变，a不能变</span>
+</span><span class='line'><span class="kt">int</span> <span class="o">*</span> <span class="k">const</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 各种不能变</span>
+</span><span class='line'><span class="k">const</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">const</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 常量引用，a不能变</span>
+</span><span class='line'><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span> <span class="n">a</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>STL 标准模版库 = 算法 ＋ 容器 ＋ 迭代器</p></li>
+<li><p>函数模版</p>
+
+<ul>
+<li><code>标示符</code> 就是将要被替换的类型</li>
+<li>调用函数模版时候 <code>标示符</code> 会自动替换对应的类型</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="err">标示符</span><span class="o">&gt;</span>
+</span><span class='line'><span class="err">返回值类型</span> <span class="err">函数名称</span><span class="p">(</span><span class="err">刑参列表</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="err">函数体</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">T</span> <span class="n">max</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span><span class="k">const</span> <span class="n">T</span> <span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// max 中T将自动替换为int</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>函数模版原理</p>
+
+<ul>
+<li>在编译阶段，编译第一碰到T为int时候生成一个int版本的函数，并替换后生成的代码放到模版后面。</li>
+</ul>
+</li>
+<li><p>类模版</p>
+
+<ul>
+<li>typename 可以用class代替</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="err">标示符</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="err">类名</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="err">类定义</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">T</span> <span class="n">sum</span><span class="p">(</span><span class="n">T</span> <span class="n">c</span><span class="p">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">T</span> <span class="n">get</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">T</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">T</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">T</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">get</span><span class="p">(){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">a</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">A</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">obj</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">obj</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">obj</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>类模版原理</p>
+
+<ul>
+<li>与函数模版原理相似。系统会自动声明替换后的代码</li>
+<li>如果模版文件和声明不再统一文件，可以使用显示声明</li>
+</ul>
+</li>
+<li><p>类模版实践</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">emplate</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">ActionContainer</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">ActionContainer</span><span class="p">(){</span>
+</span><span class='line'>        <span class="n">redoPos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">undoPos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">void</span> <span class="n">add</span> <span class="p">(</span><span class="n">T</span> <span class="n">value</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">T</span> <span class="nf">redo</span><span class="p">();</span>
+</span><span class='line'>    <span class="n">T</span> <span class="nf">undo</span><span class="p">();</span>
+</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">redoPos</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">undoPos</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">const</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">SIZE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">T</span> <span class="n">redoAction</span><span class="p">[</span><span class="n">SIZE</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">T</span> <span class="n">undoAction</span><span class="p">[</span><span class="n">SIZE</span><span class="p">];</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">ActionContainer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">add</span><span class="p">(</span><span class="n">T</span> <span class="n">value</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">undoPos</span> <span class="o">&gt;=</span> <span class="n">SIZE</span><span class="p">){</span>
+</span><span class='line'>        <span class="n">undoPos</span> <span class="o">=</span> <span class="n">SIZE</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="p">;</span><span class="n">i</span> <span class="o">++</span><span class="p">){</span>
+</span><span class='line'>            <span class="n">undoAction</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">undoAction</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">undoAction</span><span class="p">[</span><span class="n">undoPos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">T</span> <span class="n">ActionContainer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">undo</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">redoAction</span><span class="p">[</span><span class="n">redoPos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">undoAction</span><span class="p">[</span><span class="o">--</span><span class="n">undoPos</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">undoAction</span><span class="p">[</span><span class="n">undoPos</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">T</span> <span class="n">ActionContainer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">redo</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">undoAction</span><span class="p">[</span><span class="n">undoPos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">redoAction</span><span class="p">[</span><span class="o">--</span><span class="n">redoPos</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">redoAction</span><span class="p">[</span><span class="n">redoPos</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">ActionContainer</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">action</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">action</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">action</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">action</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">action</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">nUndo</span> <span class="o">=</span> <span class="n">action</span><span class="p">.</span><span class="n">undo</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nUndo</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">nUndo</span> <span class="o">=</span> <span class="n">action</span><span class="p">.</span><span class="n">undo</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nUndo</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">nRedo</span> <span class="o">=</span> <span class="n">action</span><span class="p">.</span><span class="n">redo</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nRedo</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">nRedo</span> <span class="o">=</span> <span class="n">action</span><span class="p">.</span><span class="n">redo</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nRedo</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Cocos2d源码分析]]></title>

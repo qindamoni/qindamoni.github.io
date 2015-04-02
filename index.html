@@ -9,13 +9,15 @@
   <meta name="author" content="Qindamoni">
 
   
-  <meta name="description" content="本文是基于cocosd2x 3.4 mac工程进行解析 文档编写时cocos2dx最新版本为3.4finnal，本文基于该版本
-mac 工程的openGL渲染部分是基于开源 GLFW 编写的，方便查阅 程序总入口main函数 main.cpp1
+  <meta name="description" content="指针定义之后必须初始化，而且必须使用同类型变量的地址初始化（即不能使用字面值常量初始化） 定义之后未初始化的指针内容不确定 指针内存结构 1
 2
 3
 4
 5
-int main(int argc &hellip;">
+6
+7
+int value = 1;
+int* point = &amp;int; value 0x00000001 1 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +73,66 @@ int main(int argc &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/04/02/c-plus-plus-bei-wang/">C++备忘</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-04-02T18:15:36+08:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>6:15 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ul>
+<li>指针定义之后必须初始化，而且必须使用同类型变量的地址初始化（即不能使用字面值常量初始化）
+
+<ul>
+<li>定义之后未初始化的指针内容不确定</li>
+</ul>
+</li>
+<li>指针内存结构</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">value</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">point</span>  <span class="o">=</span> <span class="o">&amp;</span><span class="kt">int</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">value</span>   <span class="mh">0x00000001</span>      <span class="mi">1</span>
+</span><span class='line'>        <span class="p">....</span>
+</span><span class='line'>        <span class="p">....</span>
+</span><span class='line'><span class="n">point</span>   <span class="mh">0x00001001</span>      <span class="mh">0x00000001</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/04/02/c-plus-plus-bei-wang/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -468,6 +530,10 @@ int main(int argc &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/02/c-plus-plus-bei-wang/">C++备忘</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/01/cocos2dyuan-ma-fen-xi/">Cocos2d源码分析</a>
       </li>
     
@@ -485,6 +551,10 @@ int main(int argc &hellip;">
     
       <li class="post">
         <a href="/blog/2014/12/20/shen-ru-li-jie-jsshu-ju-lei-xing/">深入理解js数据类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/markdown-yu-fa/">Markdown 语法</a>
       </li>
     
   </ul>
