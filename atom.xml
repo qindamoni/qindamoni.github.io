@@ -4,7 +4,7 @@
   <title><![CDATA[Qindamoni]]></title>
   <link href="http://qindamoni.com/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2015-04-02T04:08:57+08:00</updated>
+  <updated>2015-04-02T11:43:36+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -834,6 +834,37 @@
 </span><span class='line'><span class="kt">void</span> <span class="n">Director</span><span class="o">::</span><span class="n">setNextDeltaTimeZero</span><span class="p">(</span><span class="kt">bool</span> <span class="n">nextDeltaTimeZero</span><span class="p">)</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="n">_nextDeltaTimeZero</span> <span class="o">=</span> <span class="n">nextDeltaTimeZero</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>窗口相关的宽高初始设定就是setFrameSize，之后GLView，Director 获取的窗口宽高都是这里设定的值</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>CCGLViewImpl-desktop.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">GLViewImpl</span><span class="o">::</span><span class="n">setFrameSize</span><span class="p">(</span><span class="kt">float</span> <span class="n">width</span><span class="p">,</span> <span class="kt">float</span> <span class="n">height</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">GLView</span><span class="o">::</span><span class="n">setFrameSize</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">updateFrameSize</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>CCGLView.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">GLView</span><span class="o">::</span><span class="n">setFrameSize</span><span class="p">(</span><span class="kt">float</span> <span class="n">width</span><span class="p">,</span> <span class="kt">float</span> <span class="n">height</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">_designResolutionSize</span> <span class="o">=</span> <span class="n">_screenSize</span> <span class="o">=</span> <span class="n">Size</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
