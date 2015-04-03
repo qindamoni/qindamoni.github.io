@@ -1222,6 +1222,7 @@ int* point = &amp;int; value 0x00000001 1 &hellip;">
 <ul>
 <li>不能在类内部</li>
 <li>不能函数内部</li>
+<li>静态常量除外</li>
 </ul>
 </li>
 </ul>
@@ -1259,6 +1260,9 @@ int* point = &amp;int; value 0x00000001 1 &hellip;">
 <span class='line-number'>28</span>
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">{</span>
 </span><span class='line'><span class="k">public</span><span class="o">:</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">get</span><span class="p">(){</span>
@@ -1277,6 +1281,9 @@ int* point = &amp;int; value 0x00000001 1 &hellip;">
 </span><span class='line'>        <span class="c1">// int A::age = 123;</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 静态常量可以初始化</span>
+</span><span class='line'>    <span class="k">const</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">tag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">// 正确，成功获得内存地址并初始化</span>

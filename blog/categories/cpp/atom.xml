@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cpp | Qindamoni]]></title>
   <link href="http://qindamoni.com/blog/categories/cpp/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2015-04-03T01:21:05+08:00</updated>
+  <updated>2015-04-03T17:33:39+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -1130,7 +1130,8 @@ private:
 
 <ul>
 <li>不能在类内部</li>
-<li>不能函数内部
+<li>不能函数内部</li>
+<li>静态常量除外
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -1171,6 +1172,9 @@ private:
 <span class='line-number'>38</span>
 <span class='line-number'>39</span>
 <span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">{</span>
 </span><span class='line'><span class="k">public</span><span class="o">:</span>
 </span><span class='line'><span class="kt">int</span> <span class="n">get</span><span class="p">(){</span>
@@ -1194,7 +1198,10 @@ private:
 </span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">int</span> <span class="n">age</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="c1">// 静态常量可以初始化</span>
+</span><span class='line'>  <span class="k">const</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">tag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
 </span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
 </span><span class='line'>
