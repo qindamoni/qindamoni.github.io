@@ -1,0 +1,1398 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>OpenGL 基础知识 - Qindamoni</title>
+  <meta name="author" content="Qindamoni">
+
+  
+  <meta name="description" content="本文基于OpenGL3.3版本编写 数据类型 GLboolean
+GLbyte
+GLubyte
+GLchar
+GLshort
+GLushort
+GLhalf
+GLint
+GLuint
+GLsizei
+GLenum
+GLfloat
+GLclampf
+GLbitfield
+GLdouble &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://qindamoni.com/blog/2015/04/14/opengl-ji-chu-zhi-shi">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Qindamoni" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <!-- qindamoni script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
+  <script src="/javascripts/libs/jquery.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--qindamoni link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+<!--qindamoni link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Qindamoni</a></h1>
+  
+    <h2>&nbsp;</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:qindamoni.com" />
+    <input class="search" type="text" name="q" results="0"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">OpenGL 基础知识</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-04-14T21:47:28+08:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:47 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>本文基于OpenGL3.3版本编写</p>
+
+<h2>数据类型</h2>
+
+<ul>
+<li>GLboolean</li>
+<li>GLbyte</li>
+<li>GLubyte</li>
+<li>GLchar</li>
+<li>GLshort</li>
+<li>GLushort</li>
+<li>GLhalf</li>
+<li>GLint</li>
+<li>GLuint</li>
+<li>GLsizei</li>
+<li>GLenum</li>
+<li>GLfloat</li>
+<li>GLclampf</li>
+<li>GLbitfield</li>
+<li>GLdouble</li>
+<li>GLclampd</li>
+<li>GLint64</li>
+<li>GLuint64</li>
+<li>GLsizeiptr</li>
+<li>GLintptr</li>
+<li>GLsync</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>管线对象相关函数</h2>
+
+<ul>
+<li>glCreateShader</li>
+<li>glShaderSource</li>
+<li>glCompileShader</li>
+<li>glDeleteShader</li>
+<li>glIsShader</li>
+<li>glGetShaderiv</li>
+<li>glGetShaderInfoLog</li>
+<li>glGetShaderSource</li>
+</ul>
+
+
+<h3>glCreateShader</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">创建管线对象，只能创建</span><span class="n">shaderType</span><span class="err">的三种类型中的一个</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GLenum</span> <span class="n">shaderType</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">参数</span>
+</span><span class='line'><span class="n">shaderType</span>
+</span><span class='line'>    <span class="n">GL_VERTEX_SHADER</span>
+</span><span class='line'>    <span class="n">GL_GEOMETRY_SHADER</span>
+</span><span class='line'>    <span class="n">GL_FRAGMENT_SHADER</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">返回</span>
+</span><span class='line'>    <span class="err">非</span><span class="mi">0</span> <span class="o">:</span> <span class="err">创建的对象</span><span class="n">id</span>
+</span><span class='line'>    <span class="mi">0</span>   <span class="o">:</span> <span class="err">错误</span>
+</span><span class='line'>    <span class="nl">GL_INVALID_ENUM</span><span class="p">:</span><span class="err">错误的类型</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">verShader</span> <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">);</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">frgShader</span> <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_FRAGMENT_SHADER</span><span class="p">);</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">geoShader</span> <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_GEOMETRY_SHADER</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glShaderSource</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">设置管线对象的源代码</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glShaderSource</span><span class="p">(</span><span class="n">GLunit</span> <span class="n">shader</span><span class="p">,</span><span class="n">GLsizei</span> <span class="n">count</span><span class="p">,</span><span class="k">const</span> <span class="n">GLchar</span><span class="o">**</span> <span class="n">string</span><span class="p">,</span><span class="k">const</span> <span class="n">GLint</span><span class="o">*</span> <span class="n">length</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">shader</span>
+</span><span class='line'>    <span class="err">管线对象</span>
+</span><span class='line'><span class="n">count</span>
+</span><span class='line'>    <span class="err">设置</span><span class="n">string</span><span class="err">和</span><span class="n">length</span><span class="err">对象的长度</span>
+</span><span class='line'><span class="n">string</span>
+</span><span class='line'>    <span class="err">包含源代码的数组指针</span>
+</span><span class='line'><span class="n">length</span>
+</span><span class='line'>    <span class="err">包含源代码长度的数组</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">verShader</span> <span class="o">=</span> <span class="n">glCreatShader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">);</span>
+</span><span class='line'><span class="k">const</span> <span class="n">GLchar</span><span class="o">*</span> <span class="n">source</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;attribute vec4 vVertex;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;void main(void)&quot;</span>
+</span><span class='line'>    <span class="s">&quot;{&quot;</span>
+</span><span class='line'>        <span class="s">&quot;gl_Position = vVertex;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;}&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">glShaderSource</span><span class="p">(</span><span class="n">verShader</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">&amp;</span><span class="n">verSrc</span><span class="p">,</span><span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'><span class="n">glCompileShader</span><span class="p">(</span><span class="n">verShader</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glCompileShader</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">编译管线对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glCompileShader</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">shader</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glDeleteShader</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">删除管线对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glDeleteShader</span><span class="p">(</span><span class="n">GLunit</span> <span class="n">shader</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glIsShader</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">判断该对象是否是管线对象，如果已经</span><span class="n">glDeleteShader</span><span class="err">同样返回</span><span class="n">GLfalse</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="n">GLboolean</span> <span class="n">glIsShader</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">shader</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetShaderiv</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">获取管线对象相关参数，如错误信息等，管线对象必须已经创建</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glGetShaderiv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">shader</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">pname</span><span class="p">,</span><span class="n">GLint</span> <span class="o">*</span><span class="n">params</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">shader</span>
+</span><span class='line'>    <span class="err">已经创建管线对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pname</span>
+</span><span class='line'>    <span class="n">GL_SHADER_TYPE</span>
+</span><span class='line'>        <span class="err">返回管线对象的类型，即</span> <span class="p">[</span><span class="n">GL_VERTEX_SHADER</span><span class="o">|</span><span class="n">GL_FRAGMENT_SHADER</span><span class="o">|</span><span class="n">GL_GEOMETRY_SHADER</span><span class="p">]</span>
+</span><span class='line'>    <span class="n">GL_DELETE_STATUS</span>
+</span><span class='line'>        <span class="err">如果已经删除返回</span> <span class="n">GL_TRUE</span>
+</span><span class='line'>    <span class="n">GL_COMPILE_STATUS</span>
+</span><span class='line'>        <span class="err">如果编译成功返回</span> <span class="n">GL_TRUE</span>
+</span><span class='line'>    <span class="n">GL_INFO_LOG_LENGTH</span>
+</span><span class='line'>        <span class="err">日志信息长度</span>
+</span><span class='line'>    <span class="n">GL_SHADER_SOURCE_LENGTH</span>
+</span><span class='line'>        <span class="err">设置的源字符串长度</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">params</span>
+</span><span class='line'>    <span class="err">结果将存入该变量</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLint</span><span class="o">*</span> <span class="n">statValue</span><span class="p">;</span>
+</span><span class='line'><span class="n">glGetShaderiv</span><span class="p">(</span><span class="n">verShader</span><span class="p">,</span><span class="n">GL_COMPILE_STATUS</span><span class="p">,</span><span class="n">statValue</span><span class="p">);</span>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="n">statValue</span> <span class="o">==</span> <span class="n">GL_FLASE</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">glDeleteShader</span><span class="p">(</span><span class="n">verShader</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;管线编译失败&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetShaderInfoLog</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">获取管线对象日志信息</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glGetShaderInfoLog</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">shader</span><span class="p">,</span><span class="n">GLsizei</span> <span class="n">maxLength</span><span class="p">,</span><span class="n">GLsize</span><span class="o">*</span> <span class="n">length</span><span class="p">,</span><span class="n">GLchar</span><span class="o">*</span> <span class="n">infoLog</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">shader</span>
+</span><span class='line'>    <span class="err">已经创建的管线对象</span>
+</span><span class='line'><span class="n">maxLength</span>
+</span><span class='line'>    <span class="err">设置返回日志的最大长度</span>
+</span><span class='line'><span class="n">length</span>
+</span><span class='line'>    <span class="err">返回的信息长度</span>
+</span><span class='line'><span class="n">infoLog</span>
+</span><span class='line'>    <span class="err">具体的信息</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">statusValue</span><span class="p">;</span>
+</span><span class='line'><span class="n">glGetShaderiv</span><span class="p">(</span><span class="n">verShader</span><span class="p">,</span><span class="n">GL_COMPILET_STATUS</span><span class="p">,</span><span class="o">&amp;</span><span class="n">statusValue</span><span class="p">);</span>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">statusValue</span> <span class="o">==</span> <span class="n">GL_FLASE</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">GLint</span> <span class="n">maxLength</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">glGetShaderiv</span><span class="p">(</span><span class="n">verShader</span><span class="p">,</span><span class="n">GL_INFO_LOG_LENGTH</span><span class="p">,</span><span class="o">&amp;</span><span class="n">maxLength</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">GLsizei</span> <span class="n">length</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">GLchar</span><span class="o">*</span> <span class="n">info</span> <span class="o">=</span> <span class="n">new</span> <span class="n">GLchar</span><span class="p">[</span><span class="n">maxLength</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">glGetShaderInfoLog</span><span class="p">(</span><span class="n">verShader</span><span class="p">,</span><span class="n">maxLengh</span><span class="p">,</span><span class="o">&amp;</span><span class="n">length</span><span class="p">,</span><span class="n">info</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;length %d&quot;</span><span class="p">,</span><span class="n">length</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;info:%s&quot;</span><span class="p">,</span><span class="n">info</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetShaderSource</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">获取设置管线对象的源字符串</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glGetShaderSource</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">shader</span><span class="p">,</span><span class="n">GLsizei</span> <span class="n">bufSize</span><span class="p">,</span><span class="n">GLsizei</span><span class="o">*</span> <span class="n">legnth</span><span class="p">,</span><span class="n">GLchar</span><span class="o">*</span> <span class="n">source</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>管线程序对象相关函数</h2>
+
+<ul>
+<li>glCreateProgram</li>
+<li>glLinkProgram</li>
+<li>glUseProgram</li>
+<li>glDeleteProgram</li>
+<li>glValidateProgram</li>
+<li>glIsProgram</li>
+<li>glGetProgramiv</li>
+</ul>
+
+
+<h3>glCreateProgram</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">创建程序对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">glCreateProgram</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">pro</span> <span class="o">=</span> <span class="n">glCreateProgram</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 绑定编译过的管线对象</span>
+</span><span class='line'><span class="n">glAttachShader</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">verShader</span><span class="p">);</span>
+</span><span class='line'><span class="n">glAttachShader</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">frgShader</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 绑定输入属性位置</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;vertex&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;texture&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&quot;normal&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 链接程序</span>
+</span><span class='line'><span class="n">glLinkProgram</span><span class="p">(</span><span class="n">pro</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用程序对象</span>
+</span><span class='line'><span class="n">glUseProgram</span><span class="p">(</span><span class="n">pro</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// .....</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 删除程序对象</span>
+</span><span class='line'><span class="n">glDeleteProgram</span><span class="p">(</span><span class="n">pro</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glLinkProgram</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">链接程序，如果之前绑定了</span><span class="p">[</span><span class="n">GL_VERTEX_SHADER</span><span class="o">|</span><span class="n">GL_FRAGMENT_SHADER</span><span class="o">|</span><span class="n">GL_GEOMETRY_SHADER</span><span class="p">]</span><span class="err">管线对象，那么该管线对象就会处理对应的过程。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glLinkProgram</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glUserProgram</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">使一个管线程序成为当前环境的处理程序</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glUserProgram</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glDeleteProgram</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">删除管线程序对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glDeleteProgram</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glValidateProgram</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">是否可以将指定的程序设置为当前环境的激活程序，如果发生错误可以使用</span><span class="n">glGetProgramInfoLog</span><span class="err">方法查找错误原因</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="n">glValidateProgram</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glIsProgram</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">是否是有效的程序对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="n">GLboolean</span> <span class="n">glIsProgram</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">program</span>
+</span><span class='line'>    <span class="err">对象名称</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetProgramiv</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">获取程序对象信息</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glGetProgramiv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">pname</span><span class="p">,</span><span class="n">GLint</span><span class="o">*</span> <span class="n">params</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">program</span>
+</span><span class='line'>    <span class="err">程序对象</span>
+</span><span class='line'><span class="n">pname</span>
+</span><span class='line'>    <span class="n">GL_DELETE_STATUS</span>
+</span><span class='line'>        <span class="err">对象已删除返回</span> <span class="n">GL_TRUE</span>
+</span><span class='line'>    <span class="n">GL_LINK_STATUS</span>
+</span><span class='line'>        <span class="err">对象成功链接返回</span> <span class="n">GL_TRUE</span>
+</span><span class='line'>    <span class="n">GL_VALIDATE_STATUS</span>
+</span><span class='line'>        <span class="err">对后一个操作成功返回</span> <span class="n">GL_TRUE</span>
+</span><span class='line'>    <span class="n">GL_INFO_LOG_LENGTH</span>
+</span><span class='line'>        <span class="err">日志信息长度</span>
+</span><span class='line'>    <span class="n">GL_ATTACHED_SHADERS</span>
+</span><span class='line'>        <span class="err">绑定的管线对象数量</span>
+</span><span class='line'>    <span class="n">GL_ACTIVE_ATTRIBUTES</span>
+</span><span class='line'>        <span class="err">返回已经激活的有效的属性数量</span>
+</span><span class='line'>    <span class="n">GL_ACTIVE_ATTRIBUTE_MAX_LENGTH</span>
+</span><span class='line'>        <span class="err">返回支持的最大的属性数量</span>
+</span><span class='line'>    <span class="n">GL_ACTIVE_UNIFORMS</span>
+</span><span class='line'>        <span class="err">返回已经激活的有效的统一值</span>
+</span><span class='line'>    <span class="n">GL_ACTIVE_UNIFORM_MAX_LENGTH</span>
+</span><span class='line'>        <span class="err">返回支持的最大统一值数量</span>
+</span><span class='line'>    <span class="n">GL_TRANSFORM_FEEDBACK_BUFFER_MODE</span>
+</span><span class='line'>    <span class="n">GL_TRANSFORM_FEEDBACK_VARYINGS</span>
+</span><span class='line'>    <span class="n">GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH</span>
+</span><span class='line'>    <span class="n">GL_GEOMETRY_VERTICES_OUT</span>
+</span><span class='line'>    <span class="n">GL_GEOMETRY_INPUT_TYPE</span>
+</span><span class='line'>    <span class="n">GL_GEOMETRY_OUTPUT_TYPE</span>
+</span><span class='line'><span class="n">params</span>
+</span><span class='line'>    <span class="err">结果存入该变量</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetProgramInfoLog</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">获取管线程序日志信息，错误等</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glGetProgramInfoLog</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">,</span><span class="n">GLsizei</span> <span class="n">maxLength</span><span class="p">,</span><span class="n">GLsizei</span> <span class="o">*</span><span class="n">length</span><span class="p">,</span><span class="n">GLchar</span> <span class="o">*</span><span class="n">infoLog</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">program</span>
+</span><span class='line'>    <span class="err">程序对象</span>
+</span><span class='line'><span class="n">maxLength</span>
+</span><span class='line'>    <span class="err">指定获取信息的最大长度</span>
+</span><span class='line'><span class="n">length</span>
+</span><span class='line'>    <span class="err">返回信息长度</span>
+</span><span class='line'><span class="n">infoLog</span>
+</span><span class='line'>    <span class="err">返回信息内容</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">glLinkProgram</span><span class="p">(</span><span class="n">pro</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">GLint</span> <span class="n">statusValue</span><span class="p">;</span>
+</span><span class='line'><span class="n">glGetProgramiv</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">GL_LINK_STATUS</span><span class="p">,</span><span class="o">&amp;</span><span class="n">statusValue</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">statusValue</span> <span class="o">==</span> <span class="n">GL_FALSE</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">GLint</span> <span class="n">maxLength</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">glGetProgramiv</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">GL_INFO_LOG_LENGTH</span><span class="p">,</span><span class="o">&amp;</span><span class="n">maxLength</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">GLsizei</span> <span class="n">length</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">GLchar</span><span class="o">*</span> <span class="n">info</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">glGetProgramInfoLog</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">maxLength</span><span class="p">,</span><span class="o">&amp;</span><span class="n">length</span><span class="p">,</span><span class="n">info</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;length:%d&quot;</span><span class="p">,</span><span class="n">length</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;info:%s&quot;</span><span class="p">,</span><span class="n">info</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>管线对象与管线程序绑定</h2>
+
+<ul>
+<li>glAttachShader</li>
+<li>glDetachShader</li>
+</ul>
+
+
+<h3>glAttachShader</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">将管线对象绑定到程序对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glAttachShader</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">,</span><span class="n">GLuint</span> <span class="n">shader</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">shader</span>   <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">);</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">pro</span>      <span class="o">=</span> <span class="n">glCreateProgram</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glAttachShader</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">shader</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glDetachShader</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">解除绑定</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glDetachShader</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">,</span><span class="n">GLuint</span> <span class="n">shader</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>属性相关函数</h2>
+
+<ul>
+<li>glBindAttribLocation</li>
+<li>glGetAttribLocation</li>
+<li>glVertexAttrib*</li>
+<li>glGetVertexAttrib*</li>
+<li>glVertexAttribPointer</li>
+<li>glGetVertexAttribPointer</li>
+</ul>
+
+
+<h3>glBindAttribLocation</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">绑定着色器源代码中定义的属性变量</span> <span class="err">与</span> <span class="err">客户端程序中属性索引位置</span>
+</span><span class='line'><span class="err">调用</span><span class="n">glLinkProgram</span><span class="err">后生效绑定</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">,</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLchar</span><span class="o">*</span> <span class="n">name</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">program</span>
+</span><span class='line'>    <span class="err">程序对象</span>
+</span><span class='line'><span class="n">index</span>
+</span><span class='line'>    <span class="err">索引位置</span>
+</span><span class='line'><span class="n">name</span>
+</span><span class='line'>    <span class="err">着色器源代码中的变量名称</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">verShader</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;attribute vec4 vertex;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;attribute vec4 color;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;attribute vec4 normal;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;void main(void)&quot;</span>
+</span><span class='line'>    <span class="s">&quot;{&quot;</span>
+</span><span class='line'>        <span class="s">&quot;gl_Position = vVertex;&quot;</span>
+</span><span class='line'>    <span class="s">&quot;}&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">shader</span> <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glShaderSource</span><span class="p">(</span><span class="n">shader</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">&amp;</span><span class="n">verShader</span><span class="p">,</span><span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'><span class="n">glCompileShader</span><span class="p">(</span><span class="n">shader</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">pro</span>  <span class="o">=</span> <span class="n">glCreateProgram</span><span class="p">();</span>
+</span><span class='line'><span class="n">glAttachShader</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">shader</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;vertex&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;texture&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&quot;normal&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glLinkProgram</span><span class="p">(</span><span class="n">pro</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetAttribLocation</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">根据变量名称获取</span><span class="n">glGetAttribLocation</span><span class="err">设置的索引位置，如果没有找到返回</span><span class="o">-</span><span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">glGetAttribLocation</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">program</span><span class="p">,</span><span class="k">const</span> <span class="n">GLchar</span><span class="o">*</span> <span class="n">name</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="c1">// ....接上一个例子</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">vertexIndex</span>   <span class="o">=</span> <span class="n">glGetAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="s">&quot;vertex&quot;</span><span class="p">);</span>        <span class="c1">// 0</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">textrueIndex</span>  <span class="o">=</span> <span class="n">glGetAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="s">&quot;texture&quot;</span><span class="p">);</span>       <span class="c1">// 1</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">normalIndex</span>   <span class="o">=</span> <span class="n">glGetAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="s">&quot;normal&quot;</span><span class="p">);</span>        <span class="c1">// 2</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">unknownIndex</span>  <span class="o">=</span> <span class="n">glGetAttribLocation</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="s">&quot;unknown&quot;</span><span class="p">);</span>       <span class="c1">// -1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glVertexAttrib*</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">绑定一个固定值到</span><span class="n">glBindAttibLocation</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="s">&quot;name&quot;</span><span class="p">)</span><span class="err">中的</span><span class="n">index</span><span class="err">指定的管线变量中，只能设定一个值，一般用于多个顶点公用一个数据时候使用。如多个顶点都是同一个颜色。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glVertexAttrib1f</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLfloat</span>   <span class="n">v0</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib1s</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLshort</span>   <span class="n">v0</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib1d</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLdouble</span>  <span class="n">v0</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI1i</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="n">GLint</span>     <span class="n">v0</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI1ui</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="n">GLuint</span>    <span class="n">v0</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib2f</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLfloat</span>   <span class="n">v0</span><span class="p">,</span><span class="n">GLfloat</span>  <span class="n">v1</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib2s</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLshort</span>   <span class="n">v0</span><span class="p">,</span><span class="n">GLshort</span>  <span class="n">v1</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib2d</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLdouble</span>  <span class="n">v0</span><span class="p">,</span><span class="n">GLdouble</span> <span class="n">v1</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI2i</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="n">GLint</span>     <span class="n">v0</span><span class="p">,</span><span class="n">GLint</span>    <span class="n">v1</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI2ui</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="n">GLuint</span>    <span class="n">v0</span><span class="p">,</span><span class="n">GLuint</span>   <span class="n">v1</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib3f</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLfloat</span>   <span class="n">v0</span><span class="p">,</span><span class="n">GLfloat</span>  <span class="n">v1</span><span class="p">,</span><span class="n">GLfloat</span>  <span class="n">v2</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib3s</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLshort</span>   <span class="n">v0</span><span class="p">,</span><span class="n">GLshort</span>  <span class="n">v1</span><span class="p">,</span><span class="n">GLshort</span>  <span class="n">v2</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib3d</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLdouble</span>  <span class="n">v0</span><span class="p">,</span><span class="n">GLdouble</span> <span class="n">v1</span><span class="p">,</span><span class="n">GLdouble</span> <span class="n">v2</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI3i</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="n">GLint</span>     <span class="n">v0</span><span class="p">,</span><span class="n">GLint</span>    <span class="n">v1</span><span class="p">,</span><span class="n">GLint</span>    <span class="n">v2</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI3ui</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="n">GLuint</span>    <span class="n">v0</span><span class="p">,</span><span class="n">GLuint</span>   <span class="n">v1</span><span class="p">,</span><span class="n">GLuint</span>   <span class="n">v2</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4f</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLfloat</span>   <span class="n">v0</span><span class="p">,</span><span class="n">GLfloat</span>  <span class="n">v1</span><span class="p">,</span><span class="n">GLfloat</span>  <span class="n">v2</span><span class="p">,</span><span class="n">GLfloat</span>  <span class="n">v3</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4s</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLshort</span>   <span class="n">v0</span><span class="p">,</span><span class="n">GLshort</span>  <span class="n">v1</span><span class="p">,</span><span class="n">GLshort</span>  <span class="n">v2</span><span class="p">,</span><span class="n">GLshort</span>  <span class="n">v3</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4d</span><span class="p">(</span><span class="n">GLuint</span>    <span class="n">index</span><span class="p">,</span><span class="n">GLdouble</span>  <span class="n">v0</span><span class="p">,</span><span class="n">GLdouble</span> <span class="n">v1</span><span class="p">,</span><span class="n">GLdouble</span> <span class="n">v2</span><span class="p">,</span><span class="n">GLdouble</span> <span class="n">v3</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4Nub</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="n">GLubyte</span>   <span class="n">v0</span><span class="p">,</span><span class="n">GLubyte</span>  <span class="n">v1</span><span class="p">,</span><span class="n">GLubyte</span>  <span class="n">v2</span><span class="p">,</span><span class="n">GLubyte</span>  <span class="n">v3</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4i</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="n">GLint</span>     <span class="n">v0</span><span class="p">,</span><span class="n">GLint</span>    <span class="n">v1</span><span class="p">,</span><span class="n">GLint</span>    <span class="n">v2</span><span class="p">,</span><span class="n">GLint</span>    <span class="n">v3</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4ui</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="n">GLuint</span>    <span class="n">v0</span><span class="p">,</span><span class="n">GLuint</span>   <span class="n">v1</span><span class="p">,</span><span class="n">GLuint</span>   <span class="n">v2</span><span class="p">,</span><span class="n">GLuint</span>   <span class="n">v3</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib1fv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLfloat</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib1sv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLshort</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib1dv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLdouble</span>    <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI1iv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLint</span>       <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI1uiv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLuint</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib2fv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLfloat</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib2sv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLshort</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib2dv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLdouble</span>    <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI2iv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLint</span>       <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI2uiv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLuint</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib3fv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLfloat</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib3sv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLshort</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib3dv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLdouble</span>    <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI3iv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLint</span>       <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI3uiv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLuint</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4fv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLfloat</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4sv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLshort</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4dv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLdouble</span>    <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4iv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLint</span>       <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4bv</span><span class="p">(</span><span class="n">GLuint</span>   <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLbyte</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4ubv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLubyte</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4usv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLushort</span>    <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4uiv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLuint</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4Nbv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLbyte</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4Nsv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLshort</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4Niv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLint</span>       <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4Nubv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLubyte</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4Nusv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLushort</span>    <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttrib4Nuiv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLuint</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4bv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLbyte</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4ubv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLubyte</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4sv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLshort</span>     <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4usv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLushort</span>    <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4iv</span><span class="p">(</span><span class="n">GLuint</span>  <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLint</span>       <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribI4uiv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="k">const</span> <span class="n">GLuint</span>      <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribP1ui</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">type</span><span class="p">,</span><span class="n">GLboolean</span> <span class="n">normalized</span><span class="p">,</span><span class="n">GLuint</span> <span class="n">value</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribP2ui</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">type</span><span class="p">,</span><span class="n">GLboolean</span> <span class="n">normalized</span><span class="p">,</span><span class="n">GLuint</span> <span class="n">value</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribP3ui</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">type</span><span class="p">,</span><span class="n">GLboolean</span> <span class="n">normalized</span><span class="p">,</span><span class="n">GLuint</span> <span class="n">value</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">glVertexAttribP4ui</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">type</span><span class="p">,</span><span class="n">GLboolean</span> <span class="n">normalized</span><span class="p">,</span><span class="n">GLuint</span> <span class="n">value</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;color&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glVertexAttrib3f</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">0.f</span><span class="p">,</span><span class="mf">0.f</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">verShader</span>
+</span><span class='line'><span class="n">in</span> <span class="n">vec4</span> <span class="n">color</span><span class="p">;</span>
+</span><span class='line'><span class="n">out</span> <span class="n">vec4</span> <span class="n">oColor</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">oColor</span> <span class="o">=</span> <span class="n">color</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">fagShader</span>
+</span><span class='line'><span class="n">in</span> <span class="n">vec</span> <span class="n">oColor</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">oColor</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetVertexAttrib*</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">获取</span><span class="n">glVertextAttrib</span><span class="err">设置的值</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glVertexAttribPointer</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">主要做两件事</span>
+</span><span class='line'><span class="mi">1</span><span class="err">，对上一个</span><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">)</span><span class="err">中的数据进行说明，如多长一组，下一组偏移量，起始偏移量</span>
+</span><span class='line'><span class="mi">2</span><span class="err">，对上一个</span><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArray</span><span class="p">)</span><span class="err">的数据进行绑定，将上一个</span><span class="n">ARRAY_BUFFER</span><span class="err">绑定到里面。绑定之后即可使用</span><span class="n">vertextArray</span><span class="err">了。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="n">GLint</span> <span class="n">size</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">type</span><span class="p">,</span><span class="n">GLboolean</span> <span class="n">normalized</span><span class="p">,</span><span class="n">GLsizei</span> <span class="n">stride</span><span class="p">,</span><span class="k">const</span> <span class="n">GLvoid</span><span class="o">*</span> <span class="n">pointer</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">index</span>
+</span><span class='line'>    <span class="err">创建程序对象使用</span><span class="n">glBindAttibLocation</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="s">&quot;name&quot;</span><span class="p">)</span><span class="err">中的</span><span class="n">index</span>
+</span><span class='line'><span class="n">size</span>
+</span><span class='line'>    <span class="err">一组由几个单元组成</span>
+</span><span class='line'><span class="n">type</span>
+</span><span class='line'>    <span class="err">每个单元的类型</span>
+</span><span class='line'>    <span class="n">GL_BYTE</span>
+</span><span class='line'>    <span class="n">GL_UNSIGNED_BYTE</span>
+</span><span class='line'>    <span class="n">GL_SHORT</span>
+</span><span class='line'>    <span class="n">GL_UNSIGNED_SHORT</span>
+</span><span class='line'>    <span class="n">GL_INT</span>
+</span><span class='line'>    <span class="n">GL_UNSIGNED_INT</span>
+</span><span class='line'>    <span class="n">GL_HALF_FLOAT</span>
+</span><span class='line'>    <span class="n">GL_FLOAT</span>
+</span><span class='line'>    <span class="n">GL_DOUBLE</span>
+</span><span class='line'>    <span class="n">GL_INT_2_10_10_10_REV</span>
+</span><span class='line'>    <span class="n">GL_UNSIGNED_INT_2_10_10_10_REV</span>
+</span><span class='line'><span class="n">normalized</span>
+</span><span class='line'>    <span class="err">是否将进行整型数据转换成浮点型。如：将</span><span class="n">GL_BTYE</span><span class="err">类型的</span><span class="mi">256</span><span class="err">长度的整型转换到</span><span class="mi">0</span><span class="err">～</span><span class="mi">1</span><span class="err">浮点空间中。</span>
+</span><span class='line'>    <span class="err">转换规则：实际长度</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">^</span><span class="err">整型长度</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="err">例如：</span><span class="n">GL_BTYPE</span> <span class="err">类型的</span> <span class="mi">4</span>  <span class="o">=&gt;</span> <span class="n">GL_FLOAT</span> <span class="mi">4</span><span class="o">/</span><span class="mi">255</span>
+</span><span class='line'><span class="n">stride</span>
+</span><span class='line'>    <span class="err">两个单元之间的偏移量，单位</span><span class="n">btye</span>
+</span><span class='line'>    <span class="err">数据结构图示</span><span class="p">(</span><span class="n">GLfloat</span><span class="p">)</span><span class="err">：</span><span class="n">x</span><span class="o">|</span><span class="n">y</span><span class="o">|</span><span class="n">z</span><span class="o">|</span><span class="n">w</span> <span class="o">|</span> <span class="n">r</span><span class="o">|</span><span class="n">g</span><span class="o">|</span><span class="n">b</span><span class="o">|</span><span class="n">a</span> <span class="o">|</span> <span class="n">x</span><span class="o">|</span><span class="n">y</span><span class="o">|</span><span class="n">z</span><span class="o">|</span><span class="n">w</span> <span class="o">|</span> <span class="n">r</span><span class="o">|</span><span class="n">g</span><span class="o">|</span><span class="n">b</span><span class="o">|</span><span class="n">a</span>
+</span><span class='line'>    <span class="err">那么如果该</span><span class="n">index</span><span class="err">位置顶点数据，那么偏移量就是</span><span class="k">sizeof</span><span class="p">(</span><span class="n">GLfload</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+</span><span class='line'><span class="n">pointer</span>
+</span><span class='line'>    <span class="err">数据开始的偏移量</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">VAO</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</span><span class='line'><span class="n">GLint</span> <span class="n">Buffer</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">GLfloat</span> <span class="n">point1</span> <span class="o">=</span> <span class="p">{</span><span class="mf">0.1f</span><span class="p">,</span><span class="mf">0.1f</span><span class="p">,</span><span class="mf">0.1f</span><span class="p">....};</span>
+</span><span class='line'><span class="n">GLfloat</span> <span class="n">point2</span> <span class="o">=</span> <span class="p">{</span><span class="mf">0.1f</span><span class="p">,</span><span class="mf">0.1f</span><span class="p">,</span><span class="mf">0.1f</span><span class="p">....};</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glGenVertexArrays</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">VAO</span><span class="p">);</span>
+</span><span class='line'><span class="n">glGenBuffer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Buffer</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 第一组</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">VAO</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">Buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBufferData</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">piont1</span><span class="p">),</span><span class="n">point1</span><span class="p">,</span><span class="n">GL_DYNAMIC_DRAW</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">GL_FLOAT</span><span class="p">,</span><span class="n">GL_FLASE</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="n">glEnableVertexArray</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 第二组</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">VAO</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">Buffer</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBufferData</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">piont2</span><span class="p">),</span><span class="n">point1</span><span class="p">,</span><span class="n">GL_DYNAMIC_DRAW</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">GL_FLOAT</span><span class="p">,</span><span class="n">GL_FLASE</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="n">glEnableVertexArray</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">switch</span><span class="p">(</span><span class="err">条件</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="c1">// 画第一个</span>
+</span><span class='line'>        <span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">VAO</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">glDrawArray</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="c1">// 画第二个</span>
+</span><span class='line'>        <span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">VAO</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">glDrawArray</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glGetVertexAttribPointer</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">获取绑定到指定索引位置的缓存数据</span><span class="p">(</span><span class="n">ARRAY_BUFFER</span><span class="err">数据</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glGetVertexAttribPointerv</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">,</span><span class="n">GLenum</span> <span class="n">pname</span><span class="p">,</span><span class="n">GLvoid</span><span class="o">**</span> <span class="n">pointer</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">index</span>
+</span><span class='line'>    <span class="err">索引位置</span>
+</span><span class='line'><span class="n">pname</span>
+</span><span class='line'>    <span class="err">只能是</span><span class="n">GL_VERTEX_ATTRIB_ARRAY_POINTER</span>
+</span><span class='line'><span class="n">pointer</span>
+</span><span class='line'>    <span class="n">GL_ARRAY_BUFFER</span><span class="err">中绑定的缓存数据</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>顶点数据对象相关函数</h2>
+
+<ul>
+<li>glGenVertexArrays</li>
+<li>glBindVertexArray</li>
+<li>glDeleteVertexArrays</li>
+<li>glIsVertexArray</li>
+<li>glEnableVertexAttribArray</li>
+<li>glDisableVertexAttribArray</li>
+</ul>
+
+
+<h2>缓存对象相关函数</h2>
+
+<ul>
+<li>glGenBuffers</li>
+<li>glBindBuffer</li>
+<li>glIsBuffer</li>
+<li>glDeleteBuffers</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Qindamoni</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-04-14T21:47:28+08:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:47 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/04/02/c-plus-plus-bei-wang/" title="Previous Post: c++备忘">&laquo; c++备忘</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/04/14/opengl-ji-chu-zhi-shi/">OpenGL 基础知识</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/04/02/c-plus-plus-bei-wang/">C++备忘</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/04/01/cocos2dyuan-ma-fen-xi/">Cocos2d源码分析</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/31/shellyu-fa-zong-jie/">Shell语法总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/13/vimji-qiao-zong-jie/">Vim技巧总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/20/js-api-lie-biao/">Js Api 列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/20/shen-ru-li-jie-jsshu-ju-lei-xing/">深入理解js数据类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/17/markdown-yu-fa/">Markdown 语法</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Qindamoni -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
