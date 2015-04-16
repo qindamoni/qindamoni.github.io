@@ -4,7 +4,7 @@
   <title><![CDATA[Qindamoni]]></title>
   <link href="http://qindamoni.com/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2015-04-16T09:48:54+08:00</updated>
+  <updated>2015-04-16T16:10:38+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -1197,13 +1197,307 @@
 </ul>
 
 
+<h3>glGenVertexArrays</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">创建顶点数据对象名称</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glGenVertexArrays</span><span class="p">(</span><span class="n">GLsizei</span> <span class="n">n</span><span class="p">,</span><span class="n">GLuint</span><span class="o">*</span> <span class="n">arrays</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">vertextArr</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+</span><span class='line'><span class="n">glGenVertexArray</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">vertexArr</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glBindVertexArray</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">绑定顶点数据对象到当前环境。之后就可以使用</span><span class="n">glVertexAttribPointer</span><span class="err">进行内容绑定。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">array</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">array</span>
+</span><span class='line'>    <span class="err">必须是</span><span class="n">glGenVertexArrays</span><span class="err">返回的有效对象名称</span>
+</span><span class='line'>    <span class="err">如果之前没有绑定过，那么第一绑定时候会自动生成定点数据对象</span>
+</span><span class='line'>    <span class="err">如果之前绑定过，那么可以使用绑定的数据，或者重新绑定覆盖原先的内容</span>
+</span><span class='line'>    <span class="err">如果是</span> <span class="mi">0</span> <span class="err">那么取消所有顶点数据对象的绑定</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">vertexAtrr</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+</span><span class='line'><span class="n">glGenVertexArray</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">vertexArr</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glDeleteVertexArrays</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">删除之间定义的</span><span class="n">vertexArray</span><span class="err">，删除之后可以再次创建并绑定</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glDeleteVertexArrays</span><span class="p">(</span><span class="n">GLsizei</span> <span class="n">n</span><span class="p">,</span><span class="k">const</span> <span class="n">GLuint</span><span class="o">*</span> <span class="n">arrays</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">n</span>
+</span><span class='line'>    <span class="err">定义删除的对象数量</span>
+</span><span class='line'><span class="n">arrays</span>
+</span><span class='line'>    <span class="err">要删除的顶点对象首地址</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glIsVertexArray</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">判断某个对象是否是对象数据对象</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glIsVertexArray</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">array</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glEnableVertexAttribArray</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">启用</span><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">name</span><span class="p">)</span><span class="err">的</span><span class="n">index</span><span class="err">对应的属性值，默认情况所有</span><span class="n">index</span><span class="err">对应的属性是停用的状态，需要启用才能把数据传给着色器</span>
+</span><span class='line'><span class="err">并且必须在</span><span class="n">glBindVertexArray</span> <span class="err">绑定之后，开启对应的属性</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">原型</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="n">GLuint</span> <span class="n">index</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">index</span>
+</span><span class='line'>    <span class="n">glBindAttribLocation</span><span class="err">绑定的</span><span class="n">index</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">例子</span>
+</span><span class='line'><span class="c1">// verShader</span>
+</span><span class='line'><span class="n">in</span> <span class="n">vec4</span> <span class="n">vertex1</span>
+</span><span class='line'><span class="n">in</span> <span class="n">vec4</span> <span class="n">vertex2</span>
+</span><span class='line'><span class="n">in</span> <span class="n">vec4</span> <span class="n">vertex3</span>
+</span><span class='line'><span class="n">in</span> <span class="n">vec4</span> <span class="n">vertex4</span>
+</span><span class='line'><span class="n">in</span> <span class="n">vec4</span> <span class="n">vertex5</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// program</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">program</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;vertex1&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">program</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;vertex2&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">program</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&quot;vertex3&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">program</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="s">&quot;vertex4&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindAttribLocation</span><span class="p">(</span><span class="n">program</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="s">&quot;vertex5&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">GLuint</span> <span class="n">vertexAtrr</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+</span><span class='line'><span class="n">glGenVertexArray</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">vertexArr</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 第一组</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 第二组</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 第三组</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 第四组</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 第五组</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+</span><span class='line'><span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span><span class="n">buffer</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">normalize</span><span class="p">,</span><span class="n">strid</span><span class="p">,</span><span class="n">first</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用的时候开启一个顶点数据环境，画一个顶点数据</span>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glDrawArray</span><span class="p">(</span><span class="n">GL_TRAGILE</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glDrawArray</span><span class="p">(</span><span class="n">GL_TRAGILE</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glDrawArray</span><span class="p">(</span><span class="n">GL_TRAGILE</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vertexArr</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+</span><span class='line'><span class="n">glDrawArray</span><span class="p">(</span><span class="n">GL_TRAGILE</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'><span class="p">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glDisableVertexAttribArray</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">关闭指定</span><span class="n">vertextArray</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h2>缓存对象相关函数</h2>
 
 <ul>
 <li>glGenBuffers</li>
 <li>glBindBuffer</li>
+<li>glBufferData</li>
+<li>glBufferSubData</li>
+<li>glGetBufferSubData</li>
 <li>glIsBuffer</li>
 <li>glDeleteBuffers</li>
+<li>glMapBuffer</li>
+<li>glUnmapBuffer</li>
+<li>glMapBufferRange</li>
+<li>glBindBufferBase</li>
+<li>glBindBufferRange</li>
 </ul>
 
 ]]></content>
