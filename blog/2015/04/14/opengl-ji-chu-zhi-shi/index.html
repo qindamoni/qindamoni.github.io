@@ -1803,6 +1803,8 @@ GLdouble &hellip;">
 <li>glCopyTexSubImage*</li>
 <li>glGetTexImage</li>
 <li>glPixelStore*</li>
+<li>glCompressedTexImage*</li>
+<li>glCompressedTexSubImage*</li>
 </ul>
 
 
@@ -2533,6 +2535,24 @@ GLdouble &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h3>glCompressedTexImage*</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">压缩纹理格式，与</span><span class="n">glTexImage</span><span class="o">*</span><span class="err">对应，只是第三个参数</span><span class="n">internalformat</span><span class="err">必须是压缩格式</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glCompressedTexSubImage*</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">压缩纹理格式，与</span><span class="n">glTexISubmage</span><span class="o">*</span><span class="err">对应，只是第三个参数</span><span class="n">internalformat</span><span class="err">必须是压缩格式</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h2>缓存对象相关函数</h2>
 
 <ul>
@@ -2583,6 +2603,8 @@ GLdouble &hellip;">
         <a class="basic-alignment left" href="/blog/2015/04/02/c-plus-plus-bei-wang/" title="Previous Post: c++备忘">&laquo; c++备忘</a>
       
       
+        <a class="basic-alignment right" href="/blog/2015/05/01/makefileyu-fa/" title="Next Post: Makefile语法">Makefile语法 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -2594,6 +2616,10 @@ GLdouble &hellip;">
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/05/01/makefileyu-fa/">Makefile语法</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/04/14/opengl-ji-chu-zhi-shi/">OpenGL 基础知识</a>

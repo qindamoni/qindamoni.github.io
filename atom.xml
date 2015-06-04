@@ -4,7 +4,7 @@
   <title><![CDATA[Qindamoni]]></title>
   <link href="http://qindamoni.com/atom.xml" rel="self"/>
   <link href="http://qindamoni.com/"/>
-  <updated>2015-04-17T19:14:13+08:00</updated>
+  <updated>2015-06-04T18:41:48+08:00</updated>
   <id>http://qindamoni.com/</id>
   <author>
     <name><![CDATA[Qindamoni]]></name>
@@ -12,6 +12,649 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Makefile语法]]></title>
+    <link href="http://qindamoni.com/blog/2015/05/01/makefileyu-fa/"/>
+    <updated>2015-05-01T20:05:54+08:00</updated>
+    <id>http://qindamoni.com/blog/2015/05/01/makefileyu-fa</id>
+    <content type="html"><![CDATA[<h3>基本结构</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">target</span> <span class="p">...</span> <span class="o">:</span> <span class="n">prerequisites</span> <span class="p">...</span>
+</span><span class='line'>    <span class="n">command</span>
+</span><span class='line'>    <span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">target</span> <span class="p">...</span> <span class="o">:</span> <span class="n">prerequisites</span> <span class="p">...</span> <span class="p">;</span> <span class="n">command</span> <span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>target
+
+<ul>
+<li>要生成的目标，可以是下面任意一个，或下面组成的列表
+
+<ul>
+<li>具体的文件目标，如：main.o</li>
+<li>最终的应用程序，如：app.exe</li>
+<li>动态库，静态库。</li>
+<li>伪目标，如：clean，install</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>prerequisites
+
+<ul>
+<li>生成target需要的依赖规则，可以是单个或者多个规则，可以是下面的任意一个，或列表
+
+<ul>
+<li>具体的文件，如：main.c，main.h</li>
+<li>objectFile，如：main.o</li>
+<li>动态库，静态库</li>
+<li>伪目标，如：cleanone，cleantwo</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>command
+
+<ul>
+<li>生成target所执行的具体的命令。需要以tab开头。也可以与target同行，使用<code>;</code>号隔开。</li>
+<li>command 是可执行的shell命令</li>
+<li>只有当prerequisites中有一个以上文件的修改时间早于target的修改时间才会执行command指令。</li>
+</ul>
+</li>
+</ul>
+
+
+<p>例如：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">app</span><span class="p">.</span><span class="nl">exe</span> <span class="p">:</span> <span class="n">main</span><span class="p">.</span><span class="n">o</span> <span class="n">child</span><span class="p">.</span><span class="n">o</span>
+</span><span class='line'>    <span class="n">cc</span> <span class="o">-</span><span class="n">o</span> <span class="n">app</span><span class="p">.</span><span class="n">exe</span> <span class="n">main</span><span class="p">.</span><span class="n">o</span> <span class="n">child</span><span class="p">.</span><span class="n">o</span>
+</span><span class='line'><span class="n">main</span><span class="p">.</span><span class="nl">o</span> <span class="p">:</span> <span class="n">main</span><span class="p">.</span><span class="n">h</span> <span class="n">main</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'>    <span class="n">cc</span> <span class="o">-</span><span class="n">c</span> <span class="n">main</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'><span class="n">child</span><span class="p">.</span><span class="nl">o</span> <span class="p">:</span> <span class="n">child</span><span class="p">.</span><span class="n">h</span> <span class="n">child</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'>    <span class="n">cc</span> <span class="o">-</span><span class="n">c</span> <span class="n">child</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'>
+</span><span class='line'><span class="nl">clean</span> <span class="p">:</span>
+</span><span class='line'>    <span class="n">rm</span> <span class="o">*</span><span class="p">.</span><span class="n">o</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>执行流程</h3>
+
+<ul>
+<li>make 在当前目录下寻找<code>Makefile</code>或者<code>makefile</code>文件</li>
+<li>从<code>Makefile</code>文件找到第一个target，即app.exe，作为默认target，也是最终生成的文件。</li>
+<li>如果app.exe不存在，或者所依赖的main.o，child.o文件比app.exe新，那么就执行后面的command命令，重新生成app.exe。</li>
+<li>如果main.o文件不存在，或者main.c，main.h修改时间早于main.o那么执行后面的command命令，重新生成main.o文件</li>
+<li>main.c，main.h是我们的源文件，理论上是一定存在的。</li>
+</ul>
+
+
+<h4>Makefile如上所示，一步一步的解决依赖，最终生成目标文件。如main.h文件被修改，那么将重新生成main.o。而新的main.o文件又导致app.exe重新生成。</h4>
+
+<h3>自动推导</h3>
+
+<ul>
+<li>Makefile中看到<code>.o</code>结尾的target时候，make会自动将.c文件添加到prerequisites依赖里面，并且也会自动推导出<code>cc -c xxx.c</code>命令</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">main</span><span class="p">.</span><span class="nl">o</span> <span class="p">:</span> <span class="n">main</span><span class="p">.</span><span class="n">c</span> <span class="n">main</span><span class="p">.</span><span class="n">h</span>
+</span><span class='line'>    <span class="n">cc</span> <span class="o">-</span><span class="n">c</span> <span class="n">main</span><span class="p">.</span><span class="n">c</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>等价于</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">main</span><span class="p">.</span><span class="nl">o</span> <span class="p">:</span> <span class="n">main</span><span class="p">.</span><span class="n">h</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>而且当多个.o目标都依赖于某一个.h文件时候可以合并编写</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">main</span><span class="p">.</span><span class="nl">o</span> <span class="p">:</span> <span class="n">defs</span><span class="p">.</span><span class="n">h</span>
+</span><span class='line'><span class="n">child</span><span class="p">.</span><span class="nl">o</span> <span class="p">:</span> <span class="n">defs</span><span class="p">.</span><span class="n">h</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>等价于</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">main</span><span class="p">.</span><span class="n">o</span> <span class="n">child</span><span class="p">.</span><span class="nl">o</span> <span class="p">:</span> <span class="n">defs</span><span class="p">.</span><span class="n">h</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>当定义一个目标，且prerequisites为空时，make会自动推导出该目标是伪目标，并不是生成文件</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">clean</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">rm</span> <span class="o">*</span><span class="p">.</span><span class="n">o</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>自动推导伪目标有隐患（当真的存在一个clean文件），所以最好使用<code>.PHONY</code>显示的定义伪目标</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="p">.</span><span class="nl">PHONY</span> <span class="p">:</span> <span class="n">clean</span>
+</span><span class='line'><span class="nl">clean</span> <span class="p">:</span>
+</span><span class='line'>    <span class="n">rm</span> <span class="o">*</span><span class="p">.</span><span class="n">o</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>变量</h3>
+
+<h4>定义变量</h4>
+
+<ul>
+<li><code>value = val</code>
+
+<ul>
+<li>使用变量没有先后顺序</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">value1</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value2</span><span class="p">)</span>
+</span><span class='line'><span class="n">value2</span> <span class="o">=</span> <span class="mi">123</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 或者</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">value2</span> <span class="o">=</span> <span class="mi">123</span>
+</span><span class='line'><span class="n">value1</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>value := val</code>
+
+<ul>
+<li>变量使用之前必须定义</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// 正确</span>
+</span><span class='line'><span class="n">value2</span> <span class="o">=</span> <span class="mi">123</span>
+</span><span class='line'><span class="nl">value1</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 错误</span>
+</span><span class='line'><span class="nl">value1</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value2</span><span class="p">)</span>
+</span><span class='line'><span class="n">value2</span> <span class="o">=</span> <span class="mi">123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>value ?= val</code>
+
+<ul>
+<li>如果变量value没有定义，那么赋值val</li>
+</ul>
+</li>
+<li><code>value += val</code>
+
+<ul>
+<li>对变量value追加val</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">value</span> <span class="p">:</span><span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">c</span> <span class="n">b</span><span class="p">.</span><span class="n">c</span> <span class="n">c</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'><span class="nl">value</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="n">d</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 等价于</span>
+</span><span class='line'>
+</span><span class='line'><span class="nl">value</span> <span class="p">:</span><span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">c</span> <span class="n">b</span><span class="p">.</span><span class="n">c</span> <span class="n">c</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'><span class="n">value</span> <span class="o">+=</span> <span class="n">d</span><span class="p">.</span><span class="n">c</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>使用变量</h4>
+
+<ul>
+<li><code>$value</code>
+
+<ul>
+<li>不推荐</li>
+</ul>
+</li>
+<li><code>$(value)</code>
+
+<ul>
+<li>推荐</li>
+</ul>
+</li>
+<li><code>${value}</code>
+
+<ul>
+<li>推荐</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>变量替换</h4>
+
+<ul>
+<li><code>$(val:a=b)</code></li>
+<li>等价于</li>
+<li><code>${val:a=b}</code></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">value1</span> <span class="p">:</span><span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">c</span> <span class="n">b</span><span class="p">.</span><span class="n">c</span> <span class="n">c</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'><span class="nl">value2</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="nl">value1</span><span class="p">:.</span><span class="n">c</span> <span class="o">=</span> <span class="p">.</span><span class="n">o</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// $(value2) = a.o b.o c.o</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>等价于</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">value1</span> <span class="p">:</span><span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">c</span> <span class="n">b</span><span class="p">.</span><span class="n">c</span> <span class="n">c</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'><span class="nl">value2</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="nl">value1</span><span class="p">:</span><span class="o">%</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="o">%</span><span class="p">.</span><span class="n">o</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// $(value2) = a.o b.o c.o</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+</span><span class='line'><span class="n">y</span> <span class="o">=</span> <span class="n">z</span>
+</span><span class='line'><span class="nl">a</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="err">$</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// $(a) = z</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+</span><span class='line'><span class="n">y</span> <span class="o">=</span> <span class="n">z</span>
+</span><span class='line'><span class="n">z</span> <span class="o">=</span> <span class="n">u</span>
+</span><span class='line'><span class="nl">a</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="err">$</span><span class="p">(</span><span class="err">$</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// $(a) = u</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">first_second</span> <span class="o">=</span> <span class="n">Hello</span>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="n">first</span>
+</span><span class='line'><span class="n">b</span> <span class="o">=</span> <span class="n">second</span>
+</span><span class='line'><span class="n">all</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="err">$</span><span class="n">a_</span><span class="err">$</span><span class="n">b</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// $(all) = Hello</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">ifdef</span> <span class="n">do_sort</span>
+</span><span class='line'><span class="nl">func</span> <span class="p">:</span><span class="o">=</span> <span class="n">sort</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'><span class="nl">func</span> <span class="p">:</span><span class="o">=</span> <span class="n">strip</span>
+</span><span class='line'><span class="n">endif</span>
+</span><span class='line'>
+</span><span class='line'><span class="nl">bar</span> <span class="p">:</span><span class="o">=</span> <span class="n">a</span> <span class="n">d</span> <span class="n">b</span> <span class="n">g</span> <span class="n">q</span> <span class="n">c</span>
+</span><span class='line'>
+</span><span class='line'><span class="nl">foo</span> <span class="p">:</span><span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="err">$</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="err">$</span><span class="p">(</span><span class="n">bar</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// $(foo) = $(sort a d b g q c) 或者 $(strip a d b g q c)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>重写命令行变量</h4>
+
+<ul>
+<li><code>override value = val</code></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// makefile</span>
+</span><span class='line'><span class="n">value</span> <span class="o">=</span> <span class="n">abc</span>
+</span><span class='line'><span class="nl">all</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">echo</span> <span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 输出abc</span>
+</span><span class='line'><span class="err">$</span><span class="o">&gt;</span> <span class="n">make</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 输出123</span>
+</span><span class='line'><span class="err">$</span><span class="o">&gt;</span> <span class="n">make</span> <span class="n">value</span><span class="o">=</span><span class="mi">123</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// makefile</span>
+</span><span class='line'><span class="n">override</span> <span class="n">value</span><span class="o">=</span><span class="n">abc</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 输出abc</span>
+</span><span class='line'><span class="err">$</span><span class="o">&gt;</span> <span class="n">make</span> <span class="n">value</span><span class="o">=</span><span class="mi">123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>多行变量</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">defile</span> <span class="n">value</span>
+</span><span class='line'><span class="n">abc</span>
+</span><span class='line'><span class="mi">123</span>
+</span><span class='line'><span class="n">endef</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// $(value) = abc ; 123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>环境变量</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">$</span><span class="o">&gt;</span><span class="n">make</span> <span class="n">value</span><span class="o">=</span><span class="mi">123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>makefile中定义环境变量</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">export</span> <span class="n">value</span><span class="o">=</span><span class="mi">123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>目标变量</h4>
+
+<ul>
+<li>理论上在makefile中定义的变量都是全局变量</li>
+<li>单独给某个target定义的变量为目标变量</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;</span><span class="n">target</span><span class="o">&gt;</span> <span class="o">:</span> <span class="o">&lt;</span><span class="n">target</span><span class="o">-</span><span class="n">assignment</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 或者</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">target</span><span class="o">&gt;</span> <span class="o">:</span> <span class="n">override</span> <span class="o">&lt;</span><span class="n">target</span><span class="o">-</span><span class="n">assignment</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><target-assigenmet>与全局变量的定义相同</li>
+<li>目标变量的值会覆盖全局变量的值</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">all</span> <span class="p">:</span> <span class="n">value1</span><span class="o">=</span><span class="n">val1</span> <span class="n">value2</span><span class="o">?=</span><span class="n">val2</span> <span class="n">value3</span><span class="o">+=</span><span class="n">val3</span> <span class="nl">value4</span><span class="p">:</span><span class="o">=</span><span class="n">val4</span>
+</span><span class='line'>
+</span><span class='line'><span class="nl">all</span> <span class="p">:</span>
+</span><span class='line'>    <span class="n">echo</span> <span class="err">$</span><span class="p">(</span><span class="n">value1</span><span class="p">)</span>  <span class="c1">// val1</span>
+</span><span class='line'>    <span class="n">echo</span> <span class="err">$</span><span class="p">(</span><span class="n">value2</span><span class="p">)</span>  <span class="c1">// val2</span>
+</span><span class='line'>    <span class="n">echo</span> <span class="err">$</span><span class="p">(</span><span class="n">value3</span><span class="p">)</span>  <span class="c1">// val3</span>
+</span><span class='line'>    <span class="n">echo</span> <span class="err">$</span><span class="p">(</span><span class="n">value4</span><span class="p">)</span>  <span class="c1">// val4</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>内置多命令变量</h4>
+
+<ul>
+<li>$@ 表示多命令中被选中的那一个</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="nl">d</span> <span class="p">:</span>
+</span><span class='line'>    <span class="n">echo</span> <span class="err">$@</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>条件判断</h3>
+
+<ul>
+<li>相等判断</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+</span><span class='line'><span class="n">ifeq</span> <span class="p">(</span><span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">),</span><span class="n">val</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="n">val</span>
+</span><span class='line'><span class="n">endif</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>不相等判断</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+</span><span class='line'><span class="n">ifneq</span> <span class="p">(</span><span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">),</span><span class="n">val</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="n">val</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'><span class="n">endif</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义判断</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">ifdef</span> <span class="n">value</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="n">val</span>
+</span><span class='line'><span class="n">endif</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>未定义判断</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">ifndef</span> <span class="n">value</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    <span class="n">value2</span> <span class="o">=</span> <span class="n">val</span>
+</span><span class='line'><span class="n">endif</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>几个全局变量</h3>
+
+<ul>
+<li><code>$(MAKE)</code>
+
+<ul>
+<li>make执行文件路径</li>
+</ul>
+</li>
+<li><code>$(MAKELEVEL)</code>
+
+<ul>
+<li>makefile的嵌套层次</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>屏蔽</h3>
+
+<ul>
+<li>命令之前添加<code>-</code>号，表示忽略错误，继续执行</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">all</span><span class="p">:</span>
+</span><span class='line'>    <span class="o">-</span><span class="n">rm</span> <span class="o">*</span><span class="p">.</span><span class="n">o</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>命令之前添加<code>@</code>号，表示不打印该命令</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// 输出123</span>
+</span><span class='line'><span class="nl">all</span><span class="p">:</span>
+</span><span class='line'>    <span class="err">@</span><span class="n">echo</span> <span class="mi">123</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 输出 echo 123</span>
+</span><span class='line'><span class="c1">// 123</span>
+</span><span class='line'><span class="nl">all</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">echo</span> <span class="mi">123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OpenGL 基础知识]]></title>
@@ -1723,6 +2366,8 @@
 <li>glCopyTexSubImage*</li>
 <li>glGetTexImage</li>
 <li>glPixelStore*</li>
+<li>glCompressedTexImage*</li>
+<li>glCompressedTexSubImage*</li>
 </ul>
 
 
@@ -2450,6 +3095,24 @@
 </span><span class='line'>    <span class="n">GL_TEXTURE_WRAP_R</span>
 </span><span class='line'><span class="n">param</span>
 </span><span class='line'>    <span class="err">具体的值</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glCompressedTexImage*</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">压缩纹理格式，与</span><span class="n">glTexImage</span><span class="o">*</span><span class="err">对应，只是第三个参数</span><span class="n">internalformat</span><span class="err">必须是压缩格式</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>glCompressedTexSubImage*</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">说明</span>
+</span><span class='line'><span class="err">压缩纹理格式，与</span><span class="n">glTexISubmage</span><span class="o">*</span><span class="err">对应，只是第三个参数</span><span class="n">internalformat</span><span class="err">必须是压缩格式</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -7962,13 +8625,102 @@
 
 <h4>对象属性</h4>
 
+<h5>Function.prototype.call</h5>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">p</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// print null,1,2</span>
+</span><span class='line'><span class="nx">p</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;val&#39;</span><span class="o">:</span><span class="s1">&#39;123&#39;</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// print {&#39;val&#39;:&#39;123&#39;},1,2</span>
+</span><span class='line'><span class="nx">p</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h5>Function.prototype.apply</h5>
 
-<h5>Function.prototype.arguments</h5>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">p</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// print null,1,2</span>
+</span><span class='line'><span class="nx">p</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">null</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;val&#39;</span><span class="o">:</span><span class="s1">&#39;123&#39;</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// print {&#39;val&#39;:&#39;123&#39;},1,2</span>
+</span><span class='line'><span class="nx">p</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <h5>Function.prototype.bind</h5>
 
-<h5>Function.prototype.call</h5>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">p</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">newFunc</span> <span class="o">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="kc">null</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]);</span>
+</span><span class='line'><span class="c1">// print null,1,2</span>
+</span><span class='line'><span class="nx">newFunc</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;val&#39;</span><span class="o">:</span><span class="s1">&#39;123&#39;</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">newFunc</span> <span class="o">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// print {&#39;val&#39;:&#39;123&#39;},1,2</span>
+</span><span class='line'><span class="nx">newFunc</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Function.prototype.arguments</h5>
 
 <h5>Function.prototype.caller</h5>
 

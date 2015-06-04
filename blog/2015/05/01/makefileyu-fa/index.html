@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Qindamoni</title>
+  <title>Makefile语法 - Qindamoni</title>
   <meta name="author" content="Qindamoni">
 
   
@@ -22,7 +22,7 @@ target ... : prerequisites ... ; command ... target 要生成的目标，可以�
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://qindamoni.com">
+  <link rel="canonical" href="http://qindamoni.com/blog/2015/05/01/makefileyu-fa">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Qindamoni" type="application/atom+xml">
@@ -67,15 +67,12 @@ target ... : prerequisites ... ; command ... target 要生成的目标，可以�
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/05/01/makefileyu-fa/">Makefile语法</a></h1>
+      <h1 class="entry-title">Makefile语法</h1>
     
     
       <p class="meta">
@@ -91,7 +88,7 @@ target ... : prerequisites ... ; command ... target 要生成的目标，可以�
   </header>
 
 
-  <div class="entry-content"><h3>基本结构</h3>
+<div class="entry-content"><h3>基本结构</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -727,522 +724,44 @@ target ... : prerequisites ... ; command ... target 要生成的目标，可以�
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/04/14/opengl-ji-chu-zhi-shi/">OpenGL 基础知识</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-04-14T21:47:28+08:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:47 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文基于OpenGL3.3版本编写</p>
-
-<h2>数据类型</h2>
-
-<ul>
-<li>GLboolean</li>
-<li>GLbyte</li>
-<li>GLubyte</li>
-<li>GLchar</li>
-<li>GLshort</li>
-<li>GLushort</li>
-<li>GLhalf</li>
-<li>GLint</li>
-<li>GLuint</li>
-<li>GLsizei</li>
-<li>GLenum</li>
-<li>GLfloat</li>
-<li>GLclampf</li>
-<li>GLbitfield</li>
-<li>GLdouble</li>
-<li>GLclampd</li>
-<li>GLint64</li>
-<li>GLuint64</li>
-<li>GLsizeiptr</li>
-<li>GLintptr</li>
-<li>GLsync</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/04/14/opengl-ji-chu-zhi-shi/">Read on &rarr;</a>
-    </footer>
   
 
+<span class="byline author vcard">Posted by <span class="fn">Qindamoni</span></span>
 
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/04/02/c-plus-plus-bei-wang/">C++备忘</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
 
-<time class='entry-date' datetime='2015-04-02T18:15:36+08:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>6:15 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>指针定义之后必须初始化，而且必须使用同类型变量的地址初始化（即不能使用字面值常量初始化）
-
-<ul>
-<li>定义之后未初始化的指针内容不确定</li>
-</ul>
-</li>
-<li>指针内存结构</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">value</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">point</span>  <span class="o">=</span> <span class="o">&amp;</span><span class="kt">int</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">value</span>   <span class="mh">0x00000001</span>      <span class="mi">1</span>
-</span><span class='line'>        <span class="p">....</span>
-</span><span class='line'>        <span class="p">....</span>
-</span><span class='line'><span class="n">point</span>   <span class="mh">0x00001001</span>      <span class="mh">0x00000001</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/04/02/c-plus-plus-bei-wang/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+<time class='entry-date' datetime='2015-05-01T20:05:54+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>8:05 pm</span></time>
       
-  <header>
+
+
+    </p>
     
-      <h1 class="entry-title"><a href="/blog/2015/04/01/cocos2dyuan-ma-fen-xi/">Cocos2d源码分析</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-04-01T19:35:01+08:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>7:35 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>本文是基于cocosd2x 3.4 mac工程进行解析
-
-<ul>
-<li>文档编写时cocos2dx最新版本为3.4finnal，本文基于该版本</li>
-<li>mac 工程的openGL渲染部分是基于开源 GLFW 编写的，方便查阅</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>程序总入口main函数</h3>
-
-<figure class='code'><figcaption><span>main.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">AppDelegate</span> <span class="n">app</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">Application</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>定义AppDelegate对象</li>
-<li>自动调用父类构造函数Application()方法</li>
-<li>将自己（app对象）赋给类静态变量sm_pSharedApplication</li>
-<li>this 是app对象的指针，并不是对象本身</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>CCApplication-mac.mm</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Application</span><span class="o">::</span><span class="n">Application</span><span class="p">()</span><span class="o">:</span> <span class="n">_animationInterval</span><span class="p">(</span><span class="mf">1.0f</span><span class="o">/</span><span class="mf">60.0f</span><span class="o">*</span><span class="mf">1000.0f</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">CCASSERT</span><span class="p">(</span><span class="o">!</span> <span class="n">sm_pSharedApplication</span><span class="p">,</span> <span class="s">&quot;sm_pSharedApplication already exist&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">sm_pSharedApplication</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>通过getInstance()方法获取刚刚定义的app对象</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>CCApplication-mac.mm</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Application</span><span class="o">*</span> <span class="n">Application</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">CCASSERT</span><span class="p">(</span><span class="n">sm_pSharedApplication</span><span class="p">,</span> <span class="s">&quot;sm_pSharedApplication not set&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">sm_pSharedApplication</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+      <div class="sharing">
+  
+  
+  
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/04/01/cocos2dyuan-ma-fen-xi/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/31/shellyu-fa-zong-jie/">Shell语法总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-03-31T18:42:47+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>6:42 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>重定向</h1>
-
-<ul>
-<li>文件描述符
-
-<ul>
-<li>0 : 标准输入</li>
-<li>1 : 标准输出</li>
-<li>2 : 标准错误输出</li>
-<li>3 : 用户自定义文件描述符</li>
-<li>4 : 用户自定义文件描述符</li>
-<li>5 : &hellip;.</li>
-</ul>
-</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/31/shellyu-fa-zong-jie/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+        <a class="basic-alignment left" href="/blog/2015/04/14/opengl-ji-chu-zhi-shi/" title="Previous Post: OpenGL 基础知识">&laquo; OpenGL 基础知识</a>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/13/vimji-qiao-zong-jie/">Vim技巧总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-01-13T00:05:40+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:05 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>重复删除单个单词</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>x
-</span><span class='line'>.
-</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>重复删除单行</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>dd
-</span><span class='line'>.
-</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>重复缩进当前行及后面的行</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;G
-</span><span class='line'>.
-</span><span class='line'>.</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/01/13/vimji-qiao-zong-jie/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/20/js-api-lie-biao/">Js Api 列表</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-20T13:45:21+08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>1:45 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>Object</h3>
-
-<h4>类型属性</h4>
-
-<h5>Object.create</h5>
-
-<h5>Object.defineProperties</h5>
-
-<h5>Object.defineProperty</h5>
-
-<h5>Object.freeze</h5>
-
-<h5>Object.getOwnPropertyDescriptor</h5>
-
-<h5>Object.getOwnPropertyNames</h5>
-
-<h5>Object.getPrototypeOf</h5>
-
-<h5>Object.is</h5>
-
-<h5>Object.isExtensible</h5>
-
-<h5>Object.isFrozen</h5>
-
-<h5>Object.isSealed</h5>
-
-<h5>Object.keys</h5>
-
-<h5>Object.preventExtensions</h5>
-
-<h5>Object.prototype</h5>
-
-<h5>Object.seal</h5>
+    </p>
+  </footer>
+</article>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/20/js-api-lie-biao/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/20/shen-ru-li-jie-jsshu-ju-lei-xing/">深入理解js数据类型</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-20T13:42:36+08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>1:42 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>变量与字面值</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var name    = 'qindamoni';      // name 变量；'qindamoni' 字面值
-</span><span class='line'>var age     = 10;               // age 变量；10 字面值</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>字面值</h4>
-
-<p>内存中保存的一种数据结构，也就是具体的数值。</p>
-
-<h4>变量</h4>
-
-<p>保存字面值的内存位置，通过变量可以找到存储在该位置的数值。</p>
-
-<ul>
-<li>字面值单独出现没有任何意义（存储在内存中，又没有办法找到它）</li>
-<li>字面值可以赋给某个变量</li>
-<li>字面值可以出现在表达式中</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/20/shen-ru-li-jie-jsshu-ju-lei-xing/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/17/markdown-yu-fa/">Markdown 语法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-17T13:32:39+08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>1:32 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>段落</h3>
-
-<p>整个Markdown文档由多个段落组成，段落之间使用<code>空行</code>分割。</p>
-
-<ul>
-<li><code>空行</code>只能包含<code>空格</code>，<code>制表符</code>或<code>空字符</code></li>
-<li>多个<code>空行</code>会被当作一个<code>空行</code>处理</li>
-<li>同一个段落内的多个<code>换行符</code>和多个<code>空格</code>都被当作一个<code>空格</code>处理</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/17/markdown-yu-fa/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -1294,6 +813,7 @@ target ... : prerequisites ... ; command ... target 要生成的目标，可以�
 
   
 </aside>
+
 
     </div>
   </div>
